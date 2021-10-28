@@ -1,0 +1,51 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "f642f0be-95a9-4b47-9aac-3af7bd7df5fa": {
+      "ProjectGuid": "f642f0be-95a9-4b47-9aac-3af7bd7df5fa",
+      "DisplayName": "RiotAPI",
+      "ColorIndex": 0
+    },
+    "8f353231-79d2-41b8-b864-53d683de4f8f": {
+      "ProjectGuid": "8f353231-79d2-41b8-b864-53d683de4f8f",
+      "DisplayName": "ReactUI",
+      "ColorIndex": 1
+    },
+    "8272d914-4a0f-411f-b5c1-d58fde9151b5": {
+      "ProjectGuid": "8272d914-4a0f-411f-b5c1-d58fde9151b5",
+      "DisplayName": "RumbGG",
+      "ColorIndex": 2
+    },
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Miscellaneous Files",
+      "ColorIndex": -1
+    },
+    "13a899d2-fd3d-49a0-b90e-724f806346cf": {
+      "ProjectGuid": "13a899d2-fd3d-49a0-b90e-724f806346cf",
+      "DisplayName": "RumbGG",
+      "ColorIndex": 3
+    },
+    "e6993c85-93d8-457b-aae8-e13d6b704b6f": {
+      "ProjectGuid": "e6993c85-93d8-457b-aae8-e13d6b704b6f",
+      "DisplayName": "ReactUI",
+      "ColorIndex": 4
+    },
+    "d0e42ac7-923a-442f-8aa4-f44c68d8d264": {
+      "ProjectGuid": "d0e42ac7-923a-442f-8aa4-f44c68d8d264",
+      "DisplayName": "WebAPI",
+      "ColorIndex": 5
+    },
+    "c16ea705-e8ba-497d-b489-44a9caffd886": {
+      "ProjectGuid": "c16ea705-e8ba-497d-b489-44a9caffd886",
+      "DisplayName": "RumbGG",
+      "ColorIndex": 6
+    },
+    "df33fbef-a0ff-48fc-b535-e3dce1cd110e": {
+      "ProjectGuid": "df33fbef-a0ff-48fc-b535-e3dce1cd110e",
+      "DisplayName": "RiotSharp",
+      "ColorIndex": 7
+    }
+  },
+  "NextColorIndex": 8
+}

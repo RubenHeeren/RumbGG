@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "c16ea705-e8ba-497d-b489-44a9caffd886": {
+      "ProjectGuid": "c16ea705-e8ba-497d-b489-44a9caffd886",
+      "DisplayName": "ReactUI",
+      "ColorIndex": 0
+    }
+  },
+  "NextColorIndex": 1
+}
