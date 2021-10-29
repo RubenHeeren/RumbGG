@@ -1,4 +1,4 @@
-namespace RumbGG.Models
+namespace WebAPI.Models
 {
     public class GetSummonerQueryParameters
     {

@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import SummonerSearchForm from "./SummonerSearchForm";
 import SummonerSummary from "./SummonerSummary";
-import SummonerContext from "../Context/RumbGGContext";
 
 const Home = () => {
   return (

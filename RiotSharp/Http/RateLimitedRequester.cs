@@ -37,6 +37,8 @@ namespace RiotSharp.Http
             var host = GetPlatformHost(region);
             var request = PrepareRequest(host, relativeUrl, queryParameters, useHttps, HttpMethod.Get);
 
+            Console.WriteLine($"{GetType()}: CreateGetRequestAsync(): sending request to the following URI: \"{request.RequestUri}\".");
+
             return GetRateLimitedResponseContentAsync(request, region);
         }
 

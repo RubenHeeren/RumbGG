@@ -4,17 +4,27 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import { LinkContainer } from "react-router-bootstrap";
 import Container from "react-bootstrap/Container";
-import Home from "./Components/Home";
-import About from "./Components/About";
-import Champions from "./Components/Champions";
+import Home from "./Pages/Home/Home";
+import About from "./Pages/About";
+import Champions from "./Pages/Champions";
 import RumbGGContext from "./Context/RumbGGContext";
 
 const App = () => {
   const [summoner, setSummoner] = useState({});
-  const value = { summoner, setSummoner };
+  const [winRateDTOsPast7Days, setWinRateDTOsPast7Days] = useState([]);
+  const contextValue = { 
+    summonerState: { 
+      summoner, 
+      setSummoner 
+    },
+    winRateDTOsPast7DaysState: {
+      winRateDTOsPast7Days, 
+      setWinRateDTOsPast7Days 
+    } 
+  };
 
   return (
-    <RumbGGContext.Provider value={value}>
+    <RumbGGContext.Provider value={contextValue}>
     <Router>
       <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
         <Container>

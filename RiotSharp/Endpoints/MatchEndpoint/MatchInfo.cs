@@ -55,11 +55,10 @@ namespace RiotSharp.Endpoints.MatchEndpoint
         public string GameName { get; set; }
 
         /// <summary>
-        /// The date time of the game start.
+        /// Unix timestamp for when match starts on the game server.
         /// </summary>
-        [JsonProperty("gameStartTimeStemp")]
-        [JsonConverter(typeof(DateTimeConverterFromLong))]
-        public DateTime GameStartTimeStemp { get; set; }
+        [JsonProperty("gameStartTimestamp")]
+        public long GameStartTimestamp { get; set; }
 
         /// <summary>
         /// The game type.

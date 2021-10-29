@@ -45,21 +45,30 @@ namespace RiotSharp.Endpoints.MatchEndpoint
             {
                 return matchInCache;
             }
-            var json = await _requester.CreateGetRequestAsync(MatchRootUrl +
-                                                  string.Format(MatchByIdUrl, matchId), region).ConfigureAwait(false);
+            var json = await _requester.CreateGetRequestAsync(MatchRootUrl + string.Format(MatchByIdUrl, matchId), region).ConfigureAwait(false);
             var match = JsonConvert.DeserializeObject<Match>(json);
             _cache.Add(string.Format(MatchCache, region, matchId), match, MatchTtl);
             return match;
         }
 
         /// <inheritdoc />
-        public async Task<List<string>> GetMatchListAsync(Region region, string puuId,
-            long? start = null, long? count = null, long? queue = null, Enums.MatchFilterType? type = null)
+        public async Task<List<string>> GetMatchListAsync
+        (
+            Region region, string puuId,
+            long? startTime = null,
+            long? endTime = null,
+            long? queue = null,
+            Enums.MatchFilterType? type = null,
+            long? start = null,
+            long? count = null                        
+        )
         {
-            var addedArguments = CreateArgumentsListForMatchListRequest(start, count, queue, type);
+            var addedArguments = CreateArgumentsListForMatchListRequest(startTime, endTime, queue, type, start, count);
 
-            var json = await _requester.CreateGetRequestAsync(MatchRootUrl + string.Format(MatchListByPuuIdUrl, puuId),
-                region, addedArguments).ConfigureAwait(false);
+            string relativeUrl = MatchRootUrl + string.Format(MatchListByPuuIdUrl, puuId);            
+
+            var json = await _requester.CreateGetRequestAsync(relativeUrl, region, addedArguments).ConfigureAwait(false);
+
             return JsonConvert.DeserializeObject<List<string>>(json);
         }
 
@@ -81,20 +90,24 @@ namespace RiotSharp.Endpoints.MatchEndpoint
 
         #region Helper
 
-        private List<string> CreateArgumentsListForMatchListRequest(
-            long? start = null,
-            long? count = null,
+        private List<string> CreateArgumentsListForMatchListRequest
+        (
+            long? startTime = null,
+            long? endTime = null,
             long? queue = null,
-            Enums.MatchFilterType? type = null)
+            Enums.MatchFilterType? type = null,
+            long? start = null,
+            long? count = null            
+        )
         {
-            var addedArguments = new List<string>();
-            if (start.HasValue)
+            var addedArguments = new List<string>();            
+            if (startTime.HasValue)
             {
-                addedArguments.Add($"start={start.Value}");
+                addedArguments.Add($"startTime={startTime.Value}");
             }
-            if (count.HasValue)
+            if (endTime.HasValue)
             {
-                addedArguments.Add($"count={count.Value}");
+                addedArguments.Add($"endTime={endTime.Value}");
             }
             if (queue.HasValue)
             {
@@ -104,6 +117,15 @@ namespace RiotSharp.Endpoints.MatchEndpoint
             {
                 addedArguments.Add($"type={type.Value.ToCustomString()}");
             }
+            if (start.HasValue)
+            {
+                addedArguments.Add($"start={start.Value}");
+            }
+            if (count.HasValue)
+            {
+                addedArguments.Add($"count={count.Value}");
+            }           
+            
             return addedArguments;
         }
 
