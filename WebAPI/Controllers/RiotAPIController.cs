@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RiotSharp;
+using RiotSharp.Endpoints.LeagueEndpoint;
 using RiotSharp.Endpoints.MatchEndpoint;
 using RiotSharp.Endpoints.SummonerEndpoint;
 using RiotSharp.Misc;
 using System.Globalization;
 using WebAPI.Models;
 using WebAPI.Utilities;
+using RiotSharp.Endpoints.StaticDataEndpoint.Champion;
+using RiotSharp.Endpoints.ChampionMasteryEndpoint;
 
 namespace ReactUI.Controllers
 {
@@ -17,7 +20,7 @@ namespace ReactUI.Controllers
 
         public RiotAPIController()
         {
-            api = RiotApi.GetDevelopmentInstance("RGAPI-e3e2f77d-df07-4fd8-82bc-70d1990a8d92");
+            api = RiotApi.GetDevelopmentInstance("RGAPI-d3c69544-d287-42ab-85e3-d730dfadd25e");
         }
 
         [HttpGet]
@@ -28,7 +31,7 @@ namespace ReactUI.Controllers
 
             try
             {
-                Summoner summoner = await api.Summoner.GetSummonerByNameAsync(region, getSummonerQueryParameters.name);                
+                Summoner summoner = await api.Summoner.GetSummonerByNameAsync(region, getSummonerQueryParameters.name);
 
                 if (summoner != null)
                 {
@@ -39,6 +42,72 @@ namespace ReactUI.Controllers
                     return NotFound();
                 }
 
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("3-main-champions")]
+        public async Task<ActionResult<Top3PlayedChampionsCardDTO[]>> Get3MainChampions([FromQuery] Get3MainChampionsQueryParameters get3MainChampionsQueryParameters)
+        {
+            Region region = (Region)int.Parse(get3MainChampionsQueryParameters.region);
+            List<ChampionMastery> championMasteries;
+
+            try
+            {
+                championMasteries = await api.ChampionMastery.GetChampionMasteriesAsync(Region.Euw, get3MainChampionsQueryParameters.encryptedSummonerId);
+
+                Top3PlayedChampionsCardDTO[] top3PlayedChampionsCardDTOs = new Top3PlayedChampionsCardDTO[3];
+
+                for (int i = 0; i < top3PlayedChampionsCardDTOs.Length; i++)
+                {                    
+                    long id = championMasteries[i].ChampionId;
+
+                    List<string> allVersions = api.DataDragon.Versions.GetAllAsync().Result;
+                    string latestVersion = allVersions[0]; // Example of version: "10.23.1"
+
+                    ChampionListStatic allChampions = await api.DataDragon.Champions.GetAllAsync(latestVersion);
+                    string championName = allChampions.Champions.Values.Single(champion => champion.Id == id).Name;
+
+                    string championNamePurified = championName;
+                    var charsToRemove = new string[] { "@", ",", ".", ";", "'" };
+                    foreach (var c in charsToRemove)
+                    {
+                        championNamePurified = championNamePurified.Replace(c, string.Empty);
+                    }
+
+                    top3PlayedChampionsCardDTOs[i] = new();
+                    top3PlayedChampionsCardDTOs[i].name = championName;
+                    top3PlayedChampionsCardDTOs[i].masteryPoints = championMasteries[i].ChampionPoints;
+                    top3PlayedChampionsCardDTOs[i].relativeImagePath = $"assets/img/champion-tiles/{championNamePurified}_0.jpg";
+                }
+
+                return (top3PlayedChampionsCardDTOs);
+            }
+            catch (RiotSharpException ex)
+            {
+                // Handle the exception however you want.
+                return NotFound(ex.Message);
+            }
+
+            
+        }
+
+        [HttpGet]
+        [Route("ranked-solo-5x5-league-entry")]
+        public async Task<ActionResult<LeagueEntry>> GetRankedSolo5x5leagueEntry([FromQuery] GetRankedSolo5x5leagueEntryQueryParameters getRankedSolo5x5leagueEntryQueryParameters)
+        {
+            try
+            {
+                Region region = (Region)int.Parse(getRankedSolo5x5leagueEntryQueryParameters.region);
+                List<LeagueEntry> leagueEntries = await api.League.GetLeagueEntriesBySummonerAsync(region, getRankedSolo5x5leagueEntryQueryParameters.encryptedSummonerId);
+
+                LeagueEntry rankedLeagueEntry = leagueEntries.First(rankedLeagueEntry => rankedLeagueEntry.QueueType == "RANKED_SOLO_5x5");
+
+                return Ok(rankedLeagueEntry);
             }
             catch (Exception ex)
             {
@@ -101,9 +170,9 @@ namespace ReactUI.Controllers
             {
                 List<string> matchList = await api.Match.GetMatchListAsync
                 (
-                    region, 
-                    getWinrateDTOsPast7DaysQueryParameters.puuid, 
-                    UtilityMethods.DateTimeToUnixTime(DateTime.Now.AddDays(-6)), 
+                    region,
+                    getWinrateDTOsPast7DaysQueryParameters.puuid,
+                    UtilityMethods.DateTimeToUnixTime(DateTime.Now.AddDays(-6)),
                     UtilityMethods.DateTimeToUnixTime(DateTime.Now),
                     null,
                     RiotSharp.Endpoints.MatchEndpoint.Enums.MatchFilterType.Ranked,
@@ -143,7 +212,7 @@ namespace ReactUI.Controllers
 
                 foreach (string matchId in matchList)
                 {
-                    Match match = await api.Match.GetMatchAsync(region, matchId);                    
+                    Match match = await api.Match.GetMatchAsync(region, matchId);
 
                     // Participants are stored by their puuid's. So let's find this summoner.
                     Participant participant = match.Info.Participants.First(participant => participant.Puuid == getWinrateDTOsPast7DaysQueryParameters.puuid);
@@ -246,6 +315,6 @@ namespace ReactUI.Controllers
             {
                 return NotFound(ex.Message);
             }
-        }        
+        }
     }
 }

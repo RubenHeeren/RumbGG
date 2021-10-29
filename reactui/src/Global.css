@@ -6,6 +6,23 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
+.bg-body {
+  background-color: #282c34 !important;
+}
+
+.bg-extradark {
+  background-color: #0c0c0c;
+}
+
+.accordion-button {
+  background-color: #0c0c0c !important;
+  color: white !important;  
+}
+
+.accordion-button::after {
+  filter: invert(100%) sepia(79%) saturate(0%) hue-rotate(0deg) brightness(200%) contrast(200%);
+}
+
 h1 {
   font-weight: 900;
 }

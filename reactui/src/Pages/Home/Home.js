@@ -10,8 +10,6 @@ const Home = () => {
       <Container fluid className="align-items-center justify-content-center min-vh-100">
         <Row className="min-vh-100 align-items-center">
           <SummonerSearchForm />
-
-          {/* Needs summoner from SummonerSearchForm. */}
           <SummonerSummary />
         </Row>
       </Container>

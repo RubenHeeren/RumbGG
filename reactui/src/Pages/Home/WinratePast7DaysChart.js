@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import RumbGGContext from "../../Context/RumbGGContext";
+import Spinner from 'react-bootstrap/Spinner'
 
 import {
   VictoryBar,
@@ -7,6 +8,7 @@ import {
   VictoryAxis,
   VictoryStack,
   VictoryTooltip,
+  VictoryTheme
 } from "victory";
 
 export default function WinratePast7DaysChart() {
@@ -15,37 +17,69 @@ export default function WinratePast7DaysChart() {
   return (
     <div>
       {context.winRateDTOsPast7DaysState.winRateDTOsPast7Days.length > 0 ? (
-        <VictoryChart height={300} width={800} domainPadding={{ x: 30, y: 20 }}>
-          <VictoryStack            
-            labelComponent={<VictoryTooltip />}
-          >
+        <VictoryChart theme={VictoryTheme.material} style={{
+          parent: {
+            backgroundColor: "#282c34"
+          }
+        }} height={300} width={800} domainPadding={{ x: 30, y: 20 }}>
+          <VictoryStack labelComponent={<VictoryTooltip />}>
             <VictoryBar
               style={{
                 data: {
                   fill: ({ datum }) => GetBarColorBasedOnWinrate0To100(datum.y),
-                }
+                },
               }}
               data={getDataSet(
                 context.winRateDTOsPast7DaysState.winRateDTOsPast7Days
               )}
               animate={{
                 duration: 100,
-                onLoad: { duration: 300 }
+                onLoad: { duration: 300 },
               }}
-              barRatio={0.6}
+              barRatio={0.5}
             />
           </VictoryStack>
-          <VictoryAxis
+          <VictoryAxis            
             style={{
-              tickLabels: { fill: "white" },
-            }}
+              tickLabels: { fill: "white", fontFamily: "Roboto" },
+              axis: {
+                fill: "transparent",
+                stroke: "#fff",
+                opacity: 0.3,
+                strokeWidth: 1
+              },
+              grid: {
+                fill: "transparent",
+                opacity: 0.1,
+                stroke: "#fff",
+                pointerEvents: "painted"
+              }
+            }}            
             dependentAxis
             tickFormat={(tick) => `${tick}%`}
             domain={{ y: [0, 100] }}
           />
+          {/* textDecoration is line-through if no games are played. */}
           <VictoryAxis
             style={{
-              tickLabels: { fill: "white" },
+              tickLabels: { 
+                fill: "white", 
+                fontFamily: "Roboto", 
+                textDecoration: ({ tick }) => 
+                  context.winRateDTOsPast7DaysState.winRateDTOsPast7Days[7 - tick].gamesWon === 0 && 
+                  context.winRateDTOsPast7DaysState.winRateDTOsPast7Days[7 - tick].gamesLost === 0
+                  ? "line-through" : "none" 
+                },
+                axis: {
+                  fill: "transparent",
+                  stroke: "#fff",
+                  opacity: 0.3,
+                  strokeWidth: 1
+                },
+                grid: {
+                  fill: "transparent",
+                  opacity: 0,
+                }
             }}
             tickFormat={[
               sixDaysAgo.formatMMDDYY(),
@@ -54,30 +88,32 @@ export default function WinratePast7DaysChart() {
               threeDaysAgo.formatMMDDYY(),
               twoDaysAgo.formatMMDDYY(),
               yesterday.formatMMDDYY(),
-              today.formatMMDDYY()
+              today.formatMMDDYY(),
             ]}
           />
         </VictoryChart>
       ) : (
-        <p>Loading winrate of the past 7 days...</p>
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
       )}
     </div>
   );
 }
 
 function GetBarColorBasedOnWinrate0To100(winRate) {
-  if (winRate < 35) {
+  if (winRate < 33) {
     // Red
-    return '#ff0000';
+    return "#ff0000";
   } else if (winRate < 50) {
     // Orange
-    return '#ffa500';
+    return "#E06A22";
   } else if (winRate < 65) {
     // Light Green
-    return '#90ee90';    
+    return "#5BC750";
   } else {
     // Green
-    return '#00ff00';
+    return "#00ff00";
   }
 }
 
@@ -102,8 +138,13 @@ let sixDaysAgo = new Date();
 sixDaysAgo.setDate(today.getDate() - 6);
 
 Date.prototype.formatMMDDYY = function () {
-  let shortenedDateString = this.getDate() + "/" + (this.getMonth() + 1) + "/" + parseInt(this.getFullYear().toString().substring(2));
-  let dayName = this.toLocaleDateString("en-US", { weekday: 'short' });
+  let shortenedDateString =
+    this.getDate() +
+    "/" +
+    (this.getMonth() + 1) +
+    "/" +
+    parseInt(this.getFullYear().toString().substring(2));
+  let dayName = this.toLocaleDateString("en-US", { weekday: "short" });
 
   return dayName + " " + shortenedDateString;
 };
@@ -133,23 +174,13 @@ function getFormattedDDYYByDayIndex(index) {
 function getDataSet(winRateDTOsPast7Days) {
   let arrayToReturn = [];
 
-  for (let i = 6; i > 0; i--) {
+  for (let i = 6; i >= 0; i--) {
     arrayToReturn.push({
       x: getFormattedDDYYByDayIndex(i),
-      y: GetWinRatePercentageAs0To100(
-        winRateDTOsPast7Days[i].gamesWon,
-        winRateDTOsPast7Days[i].gamesLost
-      ),
-      label: ` ${winRateDTOsPast7Days[i].gamesWon} wins ${
-        winRateDTOsPast7Days[i].gamesLost
-      } losses = ${GetWinRatePercentageAs0To100(
-        winRateDTOsPast7Days[i].gamesWon,
-        winRateDTOsPast7Days[i].gamesLost
-      )}% `,
-    });    
+      y: GetWinRatePercentageAs0To100(winRateDTOsPast7Days[i].gamesWon, winRateDTOsPast7Days[i].gamesLost),
+      label: ` ${winRateDTOsPast7Days[i].gamesWon} wins ${winRateDTOsPast7Days[i].gamesLost} losses = ${GetWinRatePercentageAs0To100(winRateDTOsPast7Days[i].gamesWon, winRateDTOsPast7Days[i].gamesLost)}% `
+    });
   }
-
-  console.log(arrayToReturn);
 
   return arrayToReturn;
 }

@@ -11,49 +11,63 @@ import RumbGGContext from "./Context/RumbGGContext";
 
 const App = () => {
   const [summoner, setSummoner] = useState({});
+  const [
+    summonerRankedSolo5x5LeagueEntry,
+    setSummonerRankedSolo5x5LeagueEntry,
+  ] = useState({});
   const [winRateDTOsPast7Days, setWinRateDTOsPast7Days] = useState([]);
-  const contextValue = { 
-    summonerState: { 
-      summoner, 
-      setSummoner 
+  const [threeMainChampions, setThreeMainChampions] = useState([]);
+
+  const contextValue = {
+    summonerState: {
+      summoner,
+      setSummoner,
+    },
+    summonerRankedSolo5x5LeagueEntryState: {
+      summonerRankedSolo5x5LeagueEntry,
+      setSummonerRankedSolo5x5LeagueEntry,
     },
     winRateDTOsPast7DaysState: {
-      winRateDTOsPast7Days, 
-      setWinRateDTOsPast7Days 
-    } 
+      winRateDTOsPast7Days,
+      setWinRateDTOsPast7Days,
+    },
+    threeMainChampionsState: {
+      threeMainChampions,
+      setThreeMainChampions,
+    },
   };
 
   return (
     <RumbGGContext.Provider value={contextValue}>
-    <Router>
-      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-        <Container>
-          <LinkContainer exact to="/">
-            <Navbar.Brand href="/">RUMB.GG</Navbar.Brand>
-          </LinkContainer>
-          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-          <Navbar.Collapse id="responsive-navbar-nav">
-            <Nav className="me-auto">
-              <LinkContainer exact to="/">
-                <Nav.Link>Home</Nav.Link>
-              </LinkContainer>
+      <Router>
+        <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+          <Container>
+            <LinkContainer exact to="/">
+              <Navbar.Brand href="/">RUMB.GG</Navbar.Brand>
+            </LinkContainer>
+            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+            <Navbar.Collapse id="responsive-navbar-nav">
+              <Nav className="me-auto">
+                <LinkContainer exact to="/">
+                  <Nav.Link>Home</Nav.Link>
+                </LinkContainer>
 
-              <LinkContainer to="/champions">
-                <Nav.Link>Champions</Nav.Link>
-              </LinkContainer>
+                <LinkContainer to="/champions">
+                  <Nav.Link>Champions</Nav.Link>
+                </LinkContainer>
 
-              <LinkContainer to="/about">
-                <Nav.Link>About</Nav.Link>
-              </LinkContainer>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
+                <LinkContainer to="/about">
+                  <Nav.Link>About</Nav.Link>
+                </LinkContainer>
+              </Nav>
+            </Navbar.Collapse>
+          </Container>
+        </Navbar>
 
-      <Route path="/" exact component={Home} />
-      <Route path="/champions" component={Champions} />
-      <Route path="/about" component={About} />
-    </Router>
+        <Route path="/" exact component={Home} />
+        <Route path="/champions" component={Champions} />
+        <Route path="/about" component={About} />
+      </Router>
     </RumbGGContext.Provider>
   );
 };
