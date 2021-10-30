@@ -6,9 +6,14 @@ using RiotSharp.Endpoints.SummonerEndpoint;
 using RiotSharp.Misc;
 using System.Globalization;
 using WebAPI.Models;
-using WebAPI.Utilities;
 using RiotSharp.Endpoints.StaticDataEndpoint.Champion;
 using RiotSharp.Endpoints.ChampionMasteryEndpoint;
+using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using WebAPI.Utilities;
 
 namespace ReactUI.Controllers
 {
@@ -20,7 +25,7 @@ namespace ReactUI.Controllers
 
         public RiotAPIController()
         {
-            api = RiotApi.GetDevelopmentInstance("RGAPI-d3c69544-d287-42ab-85e3-d730dfadd25e");
+            api = RiotApi.GetDevelopmentInstance("RGAPI-db087736-5d89-4ba0-8401-102c56c8694f");
         }
 
         [HttpGet]
@@ -92,8 +97,6 @@ namespace ReactUI.Controllers
                 // Handle the exception however you want.
                 return NotFound(ex.Message);
             }
-
-            
         }
 
         [HttpGet]
@@ -121,56 +124,11 @@ namespace ReactUI.Controllers
         {
             Region region = (Region)int.Parse(getWinrateDTOsPast7DaysQueryParameters.region);
 
-            // TODO: CONVERT ALL REGIONS TO europe, americas or asia
-            switch (region)
-            {
-                case Region.Br:
-                    break;
-                case Region.Eune:
-                    break;
-                case Region.Euw:
-                    region = Region.Europe;
-                    break;
-                case Region.Na:
-                    break;
-                case Region.Kr:
-                    break;
-                case Region.Lan:
-                    break;
-                case Region.Las:
-                    break;
-                case Region.Oce:
-                    break;
-                case Region.Ru:
-                    break;
-                case Region.Tr:
-                    break;
-                case Region.Jp:
-                    break;
-                case Region.Global:
-                    break;
-                case Region.Americas:
-                    break;
-                case Region.Europe:
-                    break;
-                case Region.Asia:
-                    break;
-                case Region.NoRegion:
-                    break;
-                case Region.Ap:
-                    break;
-                case Region.Eu:
-                    break;
-                case Region.Latam:
-                    break;
-                default:
-                    break;
-            }
             try
             {
                 List<string> matchList = await api.Match.GetMatchListAsync
                 (
-                    region,
+                    ConvertSpecificRegionToContinent(region),
                     getWinrateDTOsPast7DaysQueryParameters.puuid,
                     UtilityMethods.DateTimeToUnixTime(DateTime.Now.AddDays(-6)),
                     UtilityMethods.DateTimeToUnixTime(DateTime.Now),
@@ -212,7 +170,7 @@ namespace ReactUI.Controllers
 
                 foreach (string matchId in matchList)
                 {
-                    Match match = await api.Match.GetMatchAsync(region, matchId);
+                    Match match = await api.Match.GetMatchAsync(ConvertSpecificRegionToContinent(region), matchId);
 
                     // Participants are stored by their puuid's. So let's find this summoner.
                     Participant participant = match.Info.Participants.First(participant => participant.Puuid == getWinrateDTOsPast7DaysQueryParameters.puuid);
@@ -314,6 +272,114 @@ namespace ReactUI.Controllers
             catch (Exception ex)
             {
                 return NotFound(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("get-match-history-card-dtos-last-3-solo-queue-games")]
+        public async Task<ActionResult<MatchHistoryCardDTO[]>> GetMatchHistoryCardDTOsLast3SoloQueueGames([FromQuery] GetMatchHistoryCardDTOsLast3SoloQueueGamesQueryParameters getMatchHistoryCardDTOsLast3SoloQueueGamesQueryParameters)
+        {
+            Region region = (Region)int.Parse(getMatchHistoryCardDTOsLast3SoloQueueGamesQueryParameters.region);
+
+            var matchList = await api.Match.GetMatchListAsync
+            (
+                ConvertSpecificRegionToContinent(region),
+                getMatchHistoryCardDTOsLast3SoloQueueGamesQueryParameters.puuid,
+                UtilityMethods.DateTimeToUnixTime(DateTime.Now.AddDays(-90)),
+                UtilityMethods.DateTimeToUnixTime(DateTime.Now),
+                null,
+                RiotSharp.Endpoints.MatchEndpoint.Enums.MatchFilterType.Ranked,
+                0,
+                3
+            );
+
+            Match[] matches = new Match[3];
+            MatchHistoryCardDTO[] matchHistoryCardDTOs = new MatchHistoryCardDTO[3];
+
+            for (int i = 0; i < 3; i++)
+            {
+                matches[i] = await api.Match.GetMatchAsync(ConvertSpecificRegionToContinent(region), matchList[i]);
+                Participant queryingPlayerParticipant = matches[i].Info.Participants.First(participant => participant.Puuid == getMatchHistoryCardDTOsLast3SoloQueueGamesQueryParameters.puuid);
+
+                int teamTotalKills = 0;
+
+                foreach (var teammateParticipant in matches[i].Info.Participants.Where(participant => participant.TeamId == queryingPlayerParticipant.TeamId))
+                {
+                    teamTotalKills += (int)teammateParticipant.Kills;
+                }
+
+                matchHistoryCardDTOs[i] = new MatchHistoryCardDTO();
+                matchHistoryCardDTOs[i].matchType = matches[i].Info.QueueId == 420 ? "5v5 Ranked Solo/Duo" : "5v5 Ranked Flex";
+                matchHistoryCardDTOs[i].matchStartingDate = matches[i].Info.GameCreation.ToShortDateString() + " " + matches[i].Info.GameCreation.ToLongTimeString();
+                matchHistoryCardDTOs[i].durationInMinutes = (int)(matches[i].Info.GameDuration.TotalMinutes * 1000);
+                matchHistoryCardDTOs[i].won = queryingPlayerParticipant.Winner;
+
+                matchHistoryCardDTOs[i].championName = queryingPlayerParticipant.ChampionName;
+                matchHistoryCardDTOs[i].summoner1Id = queryingPlayerParticipant.Summoner1Id;
+                matchHistoryCardDTOs[i].summoner2Id = queryingPlayerParticipant.Summoner2Id;
+                matchHistoryCardDTOs[i].kills = (int)queryingPlayerParticipant.Kills;
+                matchHistoryCardDTOs[i].deaths = (int)queryingPlayerParticipant.Deaths;
+                matchHistoryCardDTOs[i].assists = (int)queryingPlayerParticipant.Assists;
+                matchHistoryCardDTOs[i].killParticipation = ((int)((((float)matchHistoryCardDTOs[i].kills + (float)matchHistoryCardDTOs[i].assists) / (float)teamTotalKills) * 100f)).ToString() + "%";
+                matchHistoryCardDTOs[i].level = (int)queryingPlayerParticipant.ChampLevel;
+                matchHistoryCardDTOs[i].creepScore = (int)queryingPlayerParticipant.TotalMinionsKilled;
+                matchHistoryCardDTOs[i].gold = (int)queryingPlayerParticipant.GoldEarned;
+                matchHistoryCardDTOs[i].item0Id = (int)queryingPlayerParticipant.Item0;
+                matchHistoryCardDTOs[i].item1Id = (int)queryingPlayerParticipant.Item1;
+                matchHistoryCardDTOs[i].item2Id = (int)queryingPlayerParticipant.Item2;
+                matchHistoryCardDTOs[i].item3Id = (int)queryingPlayerParticipant.Item3;
+                matchHistoryCardDTOs[i].item4Id = (int)queryingPlayerParticipant.Item4;
+                matchHistoryCardDTOs[i].item5Id = (int)queryingPlayerParticipant.Item5;
+                matchHistoryCardDTOs[i].trinket = (int)queryingPlayerParticipant.Item6;
+            }
+
+            return Ok(matchHistoryCardDTOs);
+        }
+
+        private Region ConvertSpecificRegionToContinent(Region region)
+        {
+            switch (region)
+            {
+                case Region.Br:
+                    return Region.Americas;
+                case Region.Eune:
+                    return Region.Europe;
+                case Region.Euw:
+                    return Region.Europe;
+                case Region.Na:
+                    return Region.Americas;
+                case Region.Kr:
+                    return Region.Asia;
+                case Region.Lan:
+                    return Region.Americas;
+                case Region.Las:
+                    return Region.Americas;
+                case Region.Oce:
+                    return Region.Asia;
+                case Region.Ru:
+                    return Region.Europe;
+                case Region.Tr:
+                    return Region.Europe;
+                case Region.Jp:
+                    return Region.Asia;
+                case Region.Global:
+                    return Region.Global;
+                case Region.Americas:
+                    return Region.Americas;
+                case Region.Europe:
+                    return Region.Europe;
+                case Region.Asia:
+                    return Region.Asia;
+                case Region.NoRegion:
+                    return Region.NoRegion;
+                case Region.Ap:
+                    return Region.Asia;
+                case Region.Eu:
+                    return Region.Europe;
+                case Region.Latam:
+                    return Region.Americas;
+                default:
+                    return Region.Global;
             }
         }
     }

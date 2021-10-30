@@ -5,7 +5,7 @@ import RumbGGContext from "../../Context/RumbGGContext";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import Accordion from 'react-bootstrap/Accordion'
+import Accordion from "react-bootstrap/Accordion";
 import GameAccordion from "./GameAccordion";
 
 export default function SummonerSummary() {
@@ -24,10 +24,12 @@ export default function SummonerSummary() {
       xs={12}
       className="px-md-25 align-items-center justify-content-start mb-auto"
     >
-      {(isObjectNotEmpty(context.summonerState.summoner) && 
-        isObjectNotEmpty(context.summonerRankedSolo5x5LeagueEntryState.summonerRankedSolo5x5LeagueEntry) &&
-        context.threeMainChampionsState.threeMainChampions.length > 0
-        ) && (
+      {isObjectNotEmpty(context.summonerState.summoner) &&
+        isObjectNotEmpty(
+          context.summonerRankedSolo5x5LeagueEntryState
+            .summonerRankedSolo5x5LeagueEntry
+        ) &&
+        context.threeMainChampionsState.threeMainChampions.length > 0 && (
           <div className="bg-dark p-4">
             <Row>
               <Col md={2} xs={4}>
@@ -72,42 +74,52 @@ export default function SummonerSummary() {
                     context.summonerRankedSolo5x5LeagueEntryState
                       .summonerRankedSolo5x5LeagueEntry.losses
                   )}
-                  % winrate
+                  % season winrate
                 </p>
               </Col>
 
               <Col md={2} xs={12}>
-                <Button className="w-100 h-md-50">>> Full profile</Button>
+                <Button className="w-100 h-md-50">{">> Full profile"}</Button>
               </Col>
 
-
-              <Col xs={12} className="mt-4">
-                <h1 className="text-center">Past 7 days winrate</h1>
+              <Col xs={12} className="mt-4 text-center">
+                <h1>Past 7 days ranked solo/duo winrate</h1>
+                <p class="text-secondary">Striked through date means no games played on that day. Hover bars to see games played.</p>
               </Col>
 
               <Col xs={12} className="mt-2">
                 <WinratePast7DaysChart />
-              </Col>              
+              </Col>
 
               <Row className="mt-5 mb-3 text-center pe-0">
                 <h1 className="mb-3">Main champions</h1>
                 <Col md={4} className="mb-3 pe-0">
-                  <MainChampionCard top3PlayedChampionsCardDTO={context.threeMainChampionsState.threeMainChampions[0]} />
+                  <MainChampionCard
+                    top3PlayedChampionsCardDTO={
+                      context.threeMainChampionsState.threeMainChampions[0]
+                    }
+                  />
                 </Col>
                 <Col md={4} className="mb-3 pe-0">
-                  <MainChampionCard top3PlayedChampionsCardDTO={context.threeMainChampionsState.threeMainChampions[1]} />
+                  <MainChampionCard
+                    top3PlayedChampionsCardDTO={
+                      context.threeMainChampionsState.threeMainChampions[1]
+                    }
+                  />
                 </Col>
                 <Col md={4} className="mb-3 pe-0">
-                  <MainChampionCard top3PlayedChampionsCardDTO={context.threeMainChampionsState.threeMainChampions[2]} />
+                  <MainChampionCard
+                    top3PlayedChampionsCardDTO={
+                      context.threeMainChampionsState.threeMainChampions[2]
+                    }
+                  />
                 </Col>
-              </Row>                                  
+              </Row>
 
               <Col className="mt-5" xs={12}>
-                <Accordion>
-                  <GameAccordion eventKey={0} />
-                  <GameAccordion eventKey={1} />
-                  <GameAccordion eventKey={2} />
-                </Accordion>
+                <GameAccordion key={1} />
+                <GameAccordion key={1} />
+                <GameAccordion key={3} />
               </Col>
             </Row>
           </div>

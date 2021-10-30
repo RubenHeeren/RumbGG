@@ -1,4 +1,6 @@
-﻿namespace WebAPI.Utilities
+﻿using System;
+
+namespace WebAPI.Utilities
 {
     public static class UtilityMethods
     {

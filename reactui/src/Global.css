@@ -19,6 +19,24 @@ body {
   color: white !important;  
 }
 
+.win .accordion-button {
+  background-color: #124000 !important;
+  color: white !important;  
+}
+
+.lose .accordion-button {
+  background-color: #360000 !important;
+  color: white !important;  
+}
+
+.win .accordion-body {
+  background-color: #2B5E17 !important;
+}
+
+.lose .accordion-body {
+  background-color: #5E1717 !important;
+}
+
 .accordion-button::after {
   filter: invert(100%) sepia(79%) saturate(0%) hue-rotate(0deg) brightness(200%) contrast(200%);
 }
