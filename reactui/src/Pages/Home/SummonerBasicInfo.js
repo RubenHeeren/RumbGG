@@ -21,8 +21,8 @@ export default function SummonerBasicInfo() {
             <Col md={2} xs={4}>
               <img
                 className="mw-100 mt-2"
-                // changed
-                src={`//opgg-static.akamaized.net/images/profile_icons/profileIcon${context.summonerState.summoner.profileIconId}.jpg?image=q_auto:best&v=1518361200`}
+                // src={`//opgg-static.akamaized.net/images/profile_icons/profileIcon${context.summonerState.summoner.profileIconId}.jpg?image=q_auto:best&v=1518361200`}
+                src={`https://media.playmobil.com/i/playmobil/9897_product_detail/Halloween%20-%20Pompoen?locale=nl-NL,nl,*&$pdp_product_main_xl$&strip=true&qlt=80&fmt.jpeg.chroma=1,1,1&unsharp=0,1,1,7&fmt.jpeg.interlaced=true`}
                 alt="Summoner profile icon"
               />
             </Col>
