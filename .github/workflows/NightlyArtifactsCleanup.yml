@@ -1,0 +1,17 @@
+name: 'Nightly Artifacts Cleanup'
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 1 * * *' # every night at 1 am UTC
+
+jobs:
+  delete-artifacts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: kolpav/purge-artifacts-action@v1
+        with:
+          # The GITHUB_TOKEN secret is a built-in GitHub App installation access token. 
+          # You can use the installation access token to authenticate on behalf of the GitHub App installed on your repository.
+          token: ${{ secrets.GITHUB_TOKEN }}          
+          # Set expire-in to 0 to delete all artifacts.
+          expire-in: 0days

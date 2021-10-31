@@ -8,6 +8,7 @@ import Spinner from "react-bootstrap/Spinner";
 import { isObjectNotEmpty, getWinRatePercentageAs0To100 } from "../../Utilities/UtilityFunctions";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
+import { Constants } from "../../Utilities/Constants";
 
 export default function SummonerBasicInfo() {
   const context = useContext(RumbGGContext);
@@ -19,8 +20,8 @@ export default function SummonerBasicInfo() {
           <Row>
             <Col md={2} xs={4}>
               <img
-                className="mw-100"
-                src={`//opgg-static.akamaized.net/images/profile_icons/profileIcon${context.summonerState.summoner.profileIconId}.jpg?image=q_auto:best&v=1518361200`}
+                className="mw-100 mt-2"
+                src={`${Constants.STATIC_FILE_URL_PROFILE_ICONS}/${context.summonerState.summoner.profileIconId}.png`}
                 alt="Summoner profile icon"
               />
             </Col>
@@ -29,38 +30,20 @@ export default function SummonerBasicInfo() {
               <h1>{context.summonerState.summoner.name}</h1>
               <p>Level {context.summonerState.summoner.level}</p>
               <p>
-                {
-                  context.summonerRankedSolo5x5LeagueEntryState
-                    .summonerRankedSolo5x5LeagueEntry.tier
-                }
+                {context.summonerRankedSolo5x5LeagueEntryState.summonerRankedSolo5x5LeagueEntry.tier}
                 &nbsp;
-                {convertRankToNumber(
-                  context.summonerRankedSolo5x5LeagueEntryState
-                    .summonerRankedSolo5x5LeagueEntry.rank
-                )}
+                {convertRankToNumber(context.summonerRankedSolo5x5LeagueEntryState.summonerRankedSolo5x5LeagueEntry.rank)}
                 &nbsp;
-                {
-                  context.summonerRankedSolo5x5LeagueEntryState
-                    .summonerRankedSolo5x5LeagueEntry.leaguePoints
-                }{" "}
-                LP |{" "}
-                {
-                  context.summonerRankedSolo5x5LeagueEntryState
-                    .summonerRankedSolo5x5LeagueEntry.wins
-                }{" "}
-                wins |{" "}
-                {
-                  context.summonerRankedSolo5x5LeagueEntryState
-                    .summonerRankedSolo5x5LeagueEntry.losses
-                }{" "}
-                losses |{" "}
+                {context.summonerRankedSolo5x5LeagueEntryState.summonerRankedSolo5x5LeagueEntry.leaguePoints} LP |
+                &nbsp;
+                {context.summonerRankedSolo5x5LeagueEntryState.summonerRankedSolo5x5LeagueEntry.wins} wins |
+                &nbsp;
+                {context.summonerRankedSolo5x5LeagueEntryState.summonerRankedSolo5x5LeagueEntry.losses} losses |
+                &nbsp;
                 {getWinRatePercentageAs0To100(
-                  context.summonerRankedSolo5x5LeagueEntryState
-                    .summonerRankedSolo5x5LeagueEntry.wins,
-                  context.summonerRankedSolo5x5LeagueEntryState
-                    .summonerRankedSolo5x5LeagueEntry.losses
-                )}
-                % season winrate
+                  context.summonerRankedSolo5x5LeagueEntryState.summonerRankedSolo5x5LeagueEntry.wins,
+                  context.summonerRankedSolo5x5LeagueEntryState.summonerRankedSolo5x5LeagueEntry.losses
+                )}% season winrate
               </p>
             </Col>
 
