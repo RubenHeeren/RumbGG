@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import RumbGGContext from "../../Context/RumbGGContext";
-import Spinner from 'react-bootstrap/Spinner'
+import Spinner from "react-bootstrap/Spinner";
 
 import {
   VictoryBar,
@@ -8,7 +8,7 @@ import {
   VictoryAxis,
   VictoryStack,
   VictoryTooltip,
-  VictoryTheme
+  VictoryTheme,
 } from "victory";
 
 export default function WinratePast7DaysChart() {
@@ -16,12 +16,23 @@ export default function WinratePast7DaysChart() {
 
   return (
     <div>
+      <h1>Past 7 days ranked winrate</h1>
+          <p>
+            Striked through date means no games played on that day. Hover bars
+            to see total games played. Includes flex and solo/duo.
+          </p>
       {context.winRateDTOsPast7DaysState.winRateDTOsPast7Days.length > 0 ? (
-        <VictoryChart theme={VictoryTheme.material} style={{
-          parent: {
-            backgroundColor: "#282c34"
-          }
-        }} height={300} width={800} domainPadding={{ x: 30, y: 20 }}>
+        <VictoryChart
+          theme={VictoryTheme.material}
+          style={{
+            parent: {
+              backgroundColor: "#282c34",
+            },
+          }}
+          height={300}
+          width={800}
+          domainPadding={{ x: 30, y: 20 }}
+        >          
           <VictoryStack labelComponent={<VictoryTooltip />}>
             <VictoryBar
               style={{
@@ -39,22 +50,22 @@ export default function WinratePast7DaysChart() {
               barRatio={0.5}
             />
           </VictoryStack>
-          <VictoryAxis            
+          <VictoryAxis
             style={{
               tickLabels: { fill: "white", fontFamily: "Roboto" },
               axis: {
                 fill: "transparent",
                 stroke: "#fff",
                 opacity: 0.3,
-                strokeWidth: 1
+                strokeWidth: 1,
               },
               grid: {
                 fill: "transparent",
                 opacity: 0.1,
                 stroke: "#fff",
-                pointerEvents: "painted"
-              }
-            }}            
+                pointerEvents: "painted",
+              },
+            }}
             dependentAxis
             tickFormat={(tick) => `${tick}%`}
             domain={{ y: [0, 100] }}
@@ -62,24 +73,29 @@ export default function WinratePast7DaysChart() {
           {/* textDecoration is line-through if no games are played. */}
           <VictoryAxis
             style={{
-              tickLabels: { 
-                fill: "white", 
-                fontFamily: "Roboto", 
-                textDecoration: ({ tick }) => 
-                  context.winRateDTOsPast7DaysState.winRateDTOsPast7Days[7 - tick].gamesWon === 0 && 
-                  context.winRateDTOsPast7DaysState.winRateDTOsPast7Days[7 - tick].gamesLost === 0
-                  ? "line-through" : "none" 
-                },
-                axis: {
-                  fill: "transparent",
-                  stroke: "#fff",
-                  opacity: 0.3,
-                  strokeWidth: 1
-                },
-                grid: {
-                  fill: "transparent",
-                  opacity: 0,
-                }
+              tickLabels: {
+                fill: "white",
+                fontFamily: "Roboto",
+                textDecoration: ({ tick }) =>
+                  context.winRateDTOsPast7DaysState.winRateDTOsPast7Days[
+                    7 - tick
+                  ].gamesWon === 0 &&
+                  context.winRateDTOsPast7DaysState.winRateDTOsPast7Days[
+                    7 - tick
+                  ].gamesLost === 0
+                    ? "line-through"
+                    : "none",
+              },
+              axis: {
+                fill: "transparent",
+                stroke: "#fff",
+                opacity: 0.3,
+                strokeWidth: 1,
+              },
+              grid: {
+                fill: "transparent",
+                opacity: 0,
+              },
             }}
             tickFormat={[
               sixDaysAgo.formatMMDDYY(),
@@ -93,9 +109,11 @@ export default function WinratePast7DaysChart() {
           />
         </VictoryChart>
       ) : (
-        <Spinner animation="border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </Spinner>
+        <div className="w-100 d-flex justify-content-center">
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+        </div>
       )}
     </div>
   );
@@ -177,8 +195,16 @@ function getDataSet(winRateDTOsPast7Days) {
   for (let i = 6; i >= 0; i--) {
     arrayToReturn.push({
       x: getFormattedDDYYByDayIndex(i),
-      y: GetWinRatePercentageAs0To100(winRateDTOsPast7Days[i].gamesWon, winRateDTOsPast7Days[i].gamesLost),
-      label: ` ${winRateDTOsPast7Days[i].gamesWon} wins ${winRateDTOsPast7Days[i].gamesLost} losses = ${GetWinRatePercentageAs0To100(winRateDTOsPast7Days[i].gamesWon, winRateDTOsPast7Days[i].gamesLost)}% `
+      y: GetWinRatePercentageAs0To100(
+        winRateDTOsPast7Days[i].gamesWon,
+        winRateDTOsPast7Days[i].gamesLost
+      ),
+      label: ` ${winRateDTOsPast7Days[i].gamesWon} wins ${
+        winRateDTOsPast7Days[i].gamesLost
+      } losses = ${GetWinRatePercentageAs0To100(
+        winRateDTOsPast7Days[i].gamesWon,
+        winRateDTOsPast7Days[i].gamesLost
+      )}% `,
     });
   }
 

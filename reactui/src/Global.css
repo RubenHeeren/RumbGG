@@ -10,13 +10,31 @@ body {
   background-color: #282c34 !important;
 }
 
+.main-rumb-gg-text {
+  font-size: 11.1vw;
+  max-width: fit-content;  
+}
+
+.min-vh-85 {
+  min-height: 85vh!important;
+}
+
 .bg-extradark {
-  background-color: #0c0c0c;
+  background-color: #1d1d1d;
+}
+
+.modal-content {
+  background-color: #282c34 !important;
 }
 
 .accordion-button {
   background-color: #0c0c0c !important;
   color: white !important;  
+}
+
+.navbar-nav .active {
+  border-bottom: 5px solid white;
+  font-weight: 700;
 }
 
 .win .accordion-button {
@@ -39,6 +57,18 @@ body {
 
 .accordion-button::after {
   filter: invert(100%) sepia(79%) saturate(0%) hue-rotate(0deg) brightness(200%) contrast(200%);
+}
+
+.btn-close {
+  filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(500%) contrast(500%);
+}
+
+.modal-header {
+  border-bottom: 1px solid gray;
+}
+
+.modal-footer {
+  border-top: 1px solid gray;
 }
 
 h1 {

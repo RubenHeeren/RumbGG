@@ -11,52 +11,59 @@ import RumbGGContext from "./Context/RumbGGContext";
 
 const App = () => {
   const [summoner, setSummoner] = useState({});
-  const [
-    summonerRankedSolo5x5LeagueEntry,
-    setSummonerRankedSolo5x5LeagueEntry,
-  ] = useState({});
+  const [summonerRankedSolo5x5LeagueEntry, setSummonerRankedSolo5x5LeagueEntry] = useState({});
   const [winRateDTOsPast7Days, setWinRateDTOsPast7Days] = useState([]);
   const [threeMainChampions, setThreeMainChampions] = useState([]);
+  const [matchHistoryCardDTOsLast3RankedGames, setMatchHistoryCardDTOsLast3RankedGames] = useState([]);
+  const [fetchingSummonerData, setFetchingSummonerData] = useState(false);
 
   const contextValue = {
     summonerState: {
       summoner,
-      setSummoner,
+      setSummoner
     },
     summonerRankedSolo5x5LeagueEntryState: {
       summonerRankedSolo5x5LeagueEntry,
-      setSummonerRankedSolo5x5LeagueEntry,
+      setSummonerRankedSolo5x5LeagueEntry
     },
     winRateDTOsPast7DaysState: {
       winRateDTOsPast7Days,
-      setWinRateDTOsPast7Days,
+      setWinRateDTOsPast7Days
     },
     threeMainChampionsState: {
       threeMainChampions,
-      setThreeMainChampions,
+      setThreeMainChampions
     },
+    matchHistoryCardDTOsLast3RankedGamesState: {
+      matchHistoryCardDTOsLast3RankedGames,
+      setMatchHistoryCardDTOsLast3RankedGames
+    },
+    fetchingSummonerDataState: {
+      fetchingSummonerData,
+      setFetchingSummonerData
+    }
   };
 
   return (
     <RumbGGContext.Provider value={contextValue}>
       <Router>
-        <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+        <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" className="pb-0 pt-1">
           <Container>
             <LinkContainer exact to="/">
-              <Navbar.Brand href="/">RUMB.GG</Navbar.Brand>
+              <Navbar.Brand href="/" className="pb-2">RUMB.GG</Navbar.Brand>
             </LinkContainer>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
               <Nav className="me-auto">
-                <LinkContainer exact to="/">
+                <LinkContainer exact to="/" className="mx-md-2">
                   <Nav.Link>Home</Nav.Link>
                 </LinkContainer>
 
-                <LinkContainer to="/champions">
+                <LinkContainer to="/champions" className="mx-md-2">
                   <Nav.Link>Champions</Nav.Link>
                 </LinkContainer>
 
-                <LinkContainer to="/about">
+                <LinkContainer to="/about" className="mx-md-2">
                   <Nav.Link>About</Nav.Link>
                 </LinkContainer>
               </Nav>

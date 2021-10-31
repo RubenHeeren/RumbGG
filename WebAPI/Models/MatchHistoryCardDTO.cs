@@ -9,6 +9,8 @@
         public string? championName { get; set; }
         public int? summoner1Id { get; set; }
         public int? summoner2Id { get; set; }
+        public int? style1Id { get; set; }
+        public int? style2Id { get; set; }
         public int? kills { get; set; }
         public int? deaths { get; set; }
         public int? assists { get; set; }        
@@ -22,6 +24,6 @@
         public int? item3Id { get; set; }
         public int? item4Id { get; set; }
         public int? item5Id { get; set; }
-        public int? trinket { get; set; }
+        public int? trinketId { get; set; }
     }
 }

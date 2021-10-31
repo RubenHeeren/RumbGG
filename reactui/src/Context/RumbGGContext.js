@@ -5,20 +5,28 @@ import React from 'react';
 const RumbGGContext = React.createContext({
     summonerState: {
         summoner: {},
-        setSummoner: () => {}
+        setSummoner: () => { }
     },
     summonerRankedSolo5x5LeagueEntryState: {
         summonerRankedSolo5x5LeagueEntry: {},
-        setSummonerRankedSolo5x5LeagueEntry: () => {}
+        setSummonerRankedSolo5x5LeagueEntry: () => { }
     },
     winRateDTOsPast7DaysState: {
         winRateDTOsPast7Days: [],
-        setWinRateDTOsPast7Days: () => {}
+        setWinRateDTOsPast7Days: () => { }
     },
     threeMainChampionsState: {
         threeMainChampions: [],
-        setThreeMainChampions: () => {}
-    }      
+        setThreeMainChampions: () => { }
+    },
+    matchHistoryCardDTOsLast3RankedGamesState: {
+        matchHistoryCardDTOsLast3RankedGames: [],
+        setMatchHistoryCardDTOsLast3RankedGames: () => { }
+    },
+    fetchingSummonerDataState: {
+        fetchingSummonerData: false,
+        setFetchingSummonerData: () => { }
+    }
 });
 
 export default RumbGGContext;

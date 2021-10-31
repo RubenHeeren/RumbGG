@@ -25,7 +25,7 @@ namespace ReactUI.Controllers
 
         public RiotAPIController()
         {
-            api = RiotApi.GetDevelopmentInstance("RGAPI-db087736-5d89-4ba0-8401-102c56c8694f");
+            api = RiotApi.GetDevelopmentInstance("RGAPI-6d4c03e5-883e-46fb-aec8-65af41b15d61");
         }
 
         [HttpGet]
@@ -276,15 +276,15 @@ namespace ReactUI.Controllers
         }
 
         [HttpGet]
-        [Route("get-match-history-card-dtos-last-3-solo-queue-games")]
-        public async Task<ActionResult<MatchHistoryCardDTO[]>> GetMatchHistoryCardDTOsLast3SoloQueueGames([FromQuery] GetMatchHistoryCardDTOsLast3SoloQueueGamesQueryParameters getMatchHistoryCardDTOsLast3SoloQueueGamesQueryParameters)
+        [Route("match-history-card-dtos-last-3-ranked-games")]
+        public async Task<ActionResult<MatchHistoryCardDTO[]>> GetMatchHistoryCardDTOsLast3RankedGames([FromQuery] GetMatchHistoryCardDTOsLast3RankedGamesQueryParameters getMatchHistoryCardDTOsLast3RankedGamesQueryParameters)
         {
-            Region region = (Region)int.Parse(getMatchHistoryCardDTOsLast3SoloQueueGamesQueryParameters.region);
+            Region region = (Region)int.Parse(getMatchHistoryCardDTOsLast3RankedGamesQueryParameters.region);
 
             var matchList = await api.Match.GetMatchListAsync
             (
                 ConvertSpecificRegionToContinent(region),
-                getMatchHistoryCardDTOsLast3SoloQueueGamesQueryParameters.puuid,
+                getMatchHistoryCardDTOsLast3RankedGamesQueryParameters.puuid,
                 UtilityMethods.DateTimeToUnixTime(DateTime.Now.AddDays(-90)),
                 UtilityMethods.DateTimeToUnixTime(DateTime.Now),
                 null,
@@ -299,16 +299,16 @@ namespace ReactUI.Controllers
             for (int i = 0; i < 3; i++)
             {
                 matches[i] = await api.Match.GetMatchAsync(ConvertSpecificRegionToContinent(region), matchList[i]);
-                Participant queryingPlayerParticipant = matches[i].Info.Participants.First(participant => participant.Puuid == getMatchHistoryCardDTOsLast3SoloQueueGamesQueryParameters.puuid);
+                Participant queryingPlayerParticipant = matches[i].Info.Participants.First(participant => participant.Puuid == getMatchHistoryCardDTOsLast3RankedGamesQueryParameters.puuid);
 
                 int teamTotalKills = 0;
-
                 foreach (var teammateParticipant in matches[i].Info.Participants.Where(participant => participant.TeamId == queryingPlayerParticipant.TeamId))
                 {
                     teamTotalKills += (int)teammateParticipant.Kills;
                 }
 
-                matchHistoryCardDTOs[i] = new MatchHistoryCardDTO();
+                matchHistoryCardDTOs[i] = new();
+
                 matchHistoryCardDTOs[i].matchType = matches[i].Info.QueueId == 420 ? "5v5 Ranked Solo/Duo" : "5v5 Ranked Flex";
                 matchHistoryCardDTOs[i].matchStartingDate = matches[i].Info.GameCreation.ToShortDateString() + " " + matches[i].Info.GameCreation.ToLongTimeString();
                 matchHistoryCardDTOs[i].durationInMinutes = (int)(matches[i].Info.GameDuration.TotalMinutes * 1000);
@@ -317,12 +317,15 @@ namespace ReactUI.Controllers
                 matchHistoryCardDTOs[i].championName = queryingPlayerParticipant.ChampionName;
                 matchHistoryCardDTOs[i].summoner1Id = queryingPlayerParticipant.Summoner1Id;
                 matchHistoryCardDTOs[i].summoner2Id = queryingPlayerParticipant.Summoner2Id;
+                matchHistoryCardDTOs[i].style1Id = queryingPlayerParticipant.Perks.Styles[0].Style;
+                matchHistoryCardDTOs[i].style2Id = queryingPlayerParticipant.Perks.Styles[1].Style;
+
                 matchHistoryCardDTOs[i].kills = (int)queryingPlayerParticipant.Kills;
                 matchHistoryCardDTOs[i].deaths = (int)queryingPlayerParticipant.Deaths;
                 matchHistoryCardDTOs[i].assists = (int)queryingPlayerParticipant.Assists;
                 matchHistoryCardDTOs[i].killParticipation = ((int)((((float)matchHistoryCardDTOs[i].kills + (float)matchHistoryCardDTOs[i].assists) / (float)teamTotalKills) * 100f)).ToString() + "%";
                 matchHistoryCardDTOs[i].level = (int)queryingPlayerParticipant.ChampLevel;
-                matchHistoryCardDTOs[i].creepScore = (int)queryingPlayerParticipant.TotalMinionsKilled;
+                matchHistoryCardDTOs[i].creepScore = (int)(queryingPlayerParticipant.TotalMinionsKilled + queryingPlayerParticipant.NeutralMinionsKilled);
                 matchHistoryCardDTOs[i].gold = (int)queryingPlayerParticipant.GoldEarned;
                 matchHistoryCardDTOs[i].item0Id = (int)queryingPlayerParticipant.Item0;
                 matchHistoryCardDTOs[i].item1Id = (int)queryingPlayerParticipant.Item1;
@@ -330,7 +333,7 @@ namespace ReactUI.Controllers
                 matchHistoryCardDTOs[i].item3Id = (int)queryingPlayerParticipant.Item3;
                 matchHistoryCardDTOs[i].item4Id = (int)queryingPlayerParticipant.Item4;
                 matchHistoryCardDTOs[i].item5Id = (int)queryingPlayerParticipant.Item5;
-                matchHistoryCardDTOs[i].trinket = (int)queryingPlayerParticipant.Item6;
+                matchHistoryCardDTOs[i].trinketId = (int)queryingPlayerParticipant.Item6;
             }
 
             return Ok(matchHistoryCardDTOs);

@@ -5,6 +5,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import RumbGGContext from "../../Context/RumbGGContext";
 import Spinner from "react-bootstrap/Spinner";
+import { Constants } from "../../Utilities/Constants";
 
 export default function SummonerSearchForm() {
   const context = useContext(RumbGGContext);
@@ -12,10 +13,11 @@ export default function SummonerSearchForm() {
   const { summonerRankedSolo5x5LeagueEntry, setSummonerRankedSolo5x5LeagueEntry, } = context.summonerRankedSolo5x5LeagueEntryState;
   const { winRateDTOsPast7Days, setWinRateDTOsPast7Days } = context.winRateDTOsPast7DaysState;
   const { threeMainChampions, setThreeMainChampions } = context.threeMainChampionsState;
+  const { matchHistoryCardDTOsLast3RankedGames, setMatchHistoryCardDTOsLast3RankedGames } = context.matchHistoryCardDTOsLast3RankedGamesState;
+  const { fetchingSummonerData, setFetchingSummonerData } = context.fetchingSummonerDataState;
 
-  const [summonerName, setSummonerName] = useState("Bold Critter");
+  const [summonerName, setSummonerName] = useState("Rumb");
   const [region, setRegion] = useState(2);
-  const [fetchingSummonerData, setFetchingSummonerData] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -23,10 +25,8 @@ export default function SummonerSearchForm() {
     getSummoner();
   };
 
-  function getSummoner() {    
-    const url = `https://localhost:7124/riotapi/summoner?name=${encodeURIComponent(
-      summonerName
-    )}&region=${encodeURIComponent(region)}`;
+  function getSummoner() {
+    const url = `${Constants.API_URL_SUMMONER}?name=${encodeURIComponent(summonerName)}&region=${encodeURIComponent(region)}`;
 
     fetch(url).then((response) => {
       if (response.ok) {
@@ -35,6 +35,7 @@ export default function SummonerSearchForm() {
           getWinrateDTOsPast7Days(summonerFromServer.puuid, summonerFromServer.region);
           getRankedSolo5x5leagueEntry(summonerFromServer.id, summonerFromServer.region);
           getThreeMainChampions(summonerFromServer.id, summonerFromServer.region);
+          getMatchHistoryCardDTOsLast3RankedGames(summonerFromServer.puuid, summonerFromServer.region);
         });
       } else {
         response
@@ -48,18 +49,19 @@ export default function SummonerSearchForm() {
             alert(error);
           });
       }
-    });    
+    });
   }
 
   function getRankedSolo5x5leagueEntry(encryptedSummonerId, region) {
-    const url = `https://localhost:7124/riotapi/ranked-solo-5x5-league-entry/?encryptedSummonerId=${encodeURIComponent(
+    const url = `${Constants.API_URL_RANKED_SOLO_5X5_LEAGUE_ENTRY}?encryptedSummonerId=${encodeURIComponent(
       encryptedSummonerId
     )}&region=${encodeURIComponent(region)}`;
 
     fetch(url).then((response) => {
       if (response.ok) {
-        response.json().then((rankedSolo5x5leagueEntry) => {          
+        response.json().then((rankedSolo5x5leagueEntry) => {
           setSummonerRankedSolo5x5LeagueEntry(rankedSolo5x5leagueEntry);
+          setFetchingSummonerData(false);
         });
       } else {
         response
@@ -77,7 +79,7 @@ export default function SummonerSearchForm() {
   }
 
   function getWinrateDTOsPast7Days(puuid, region) {
-    const url = `https://localhost:7124/riotapi/winrate-dtos-past-7-days/?puuid=${encodeURIComponent(
+    const url = `${Constants.API_URL_WINRATE_DTOS_PAST_SEVEN_DAYS}?puuid=${encodeURIComponent(
       puuid
     )}&region=${encodeURIComponent(region)}`;
 
@@ -85,7 +87,6 @@ export default function SummonerSearchForm() {
       if (response.ok) {
         response.json().then((winrateDTOsPast7DaysFromServer) => {
           setWinRateDTOsPast7Days(winrateDTOsPast7DaysFromServer);
-          setFetchingSummonerData(false);
         });
       } else {
         response
@@ -103,7 +104,7 @@ export default function SummonerSearchForm() {
   }
 
   function getThreeMainChampions(encryptedSummonerId, region) {
-    const url = `https://localhost:7124/riotapi/3-main-champions/?encryptedSummonerId=${encodeURIComponent(encryptedSummonerId)}&region=${encodeURIComponent(region)}`;
+    const url = `${Constants.API_URL_THREE_MAIN_CHAMPIONS}?encryptedSummonerId=${encodeURIComponent(encryptedSummonerId)}&region=${encodeURIComponent(region)}`;
 
     fetch(url).then((response) => {
       if (response.ok) {
@@ -125,10 +126,35 @@ export default function SummonerSearchForm() {
     });
   }
 
+  function getMatchHistoryCardDTOsLast3RankedGames(puuid, region) {
+    const url = `${Constants.API_URL_MATCH_HISTORY_CARD_DTOS_LAST_THREE_RANKED_GAMES}?puuid=${encodeURIComponent(puuid)}&region=${encodeURIComponent(region)}`;
+
+    fetch(url).then((response) => {
+      if (response.ok) {
+        response.json().then((matchHistoryCardDTOsLast3RankedGamesFromServer) => {
+          setMatchHistoryCardDTOsLast3RankedGames(matchHistoryCardDTOsLast3RankedGamesFromServer);
+        });
+      } else {
+        response
+          .text()
+          .then(function (text) {
+            throw new Error(
+              `Fetching MatchHistoryCardDTOsLast3RankedGames. Server error message: ${text}.`
+            );
+          })
+          .catch((error) => {
+            alert(error);
+          });
+      }
+    });
+  }
 
   return (
-    <Form onSubmit={handleSubmit} className="px-md-25 mt-auto mb-4">
+    <Form onSubmit={handleSubmit} className="px-md-25 mb-4">
       <Row>
+        <div className="w-100 d-flex flex-column justify-content-center">
+          <h1 className="main-rumb-gg-text">RUMB.GG</h1>          
+        </div>
         <Col xs={8}>
           <Form.Control
             value={summonerName}
@@ -144,12 +170,12 @@ export default function SummonerSearchForm() {
           <Form.Select
             value={region}
             onChange={(event) => setRegion(event.target.value)}
-            aria-label="Floating label select example"
+            aria-label="Region"
             className="h-100"
           >
             <option value="2">EUW</option>
-            <option value="2">NA</option>
-            <option value="3">OCE</option>
+            <option value="3">NA</option>
+            <option value="4">OCE</option>
           </Form.Select>
         </Col>
 
@@ -173,14 +199,6 @@ export default function SummonerSearchForm() {
           </Button>
         </Col>
       </Row>
-
-      {fetchingSummonerData && (
-        <div className="d-flex justify-content-center mt-5">
-          <Spinner animation="border" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </Spinner>
-        </div>
-      )}
     </Form>
   );
 }
