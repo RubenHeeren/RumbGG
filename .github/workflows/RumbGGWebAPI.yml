@@ -25,15 +25,15 @@ jobs:
 
     - name: Build and publish
       run: |
-        cd Server
+        cd WebAPI
         dotnet build --configuration Release
-        dotnet publish -c Release -o ${{env.DOTNET_ROOT}}\myapp -r win-x86 --self-contained true
+        dotnet publish -c Release -o ${{env.DOTNET_ROOT}}\build -r win-x86 --self-contained true
 
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v2
       with:
         name: .net-app
-        path: ${{env.DOTNET_ROOT}}\myapp
+        path: ${{env.DOTNET_ROOT}}\build
 
   deploy:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
