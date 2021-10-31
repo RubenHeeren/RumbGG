@@ -4,13 +4,12 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import SummonerSearchForm from "./SummonerSearchForm";
 import SummonerSummary from "./SummonerSummary";
-import { isObjectNotEmpty } from "../../Utilities/UtilityFunctions";
 
 export default function Home() {
   const context = useContext(RumbGGContext);
   const [modalShow, setModalShow] = useState(false);
-
   const isFirstRun = useRef(true);
+  
   useEffect(() => {
 
     if (isFirstRun.current) {

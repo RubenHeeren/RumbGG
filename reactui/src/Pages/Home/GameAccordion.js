@@ -30,7 +30,7 @@ export default function GameAccordion(props) {
                     <img
                       src={`${Constants.STATIC_FILE_URL_CHAMPION_TILES}/${game.championName}_0.jpg`}
                       className="w-100 rounded-circle border border-secondary shadow"
-                      alt="champion image"
+                      alt="champion portrait"
                     />
                   </Col>
                   <Col xs={6}>

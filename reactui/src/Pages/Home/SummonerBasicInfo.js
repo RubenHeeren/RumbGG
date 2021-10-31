@@ -21,6 +21,7 @@ export default function SummonerBasicInfo() {
               <img
                 className="mw-100"
                 src={`//opgg-static.akamaized.net/images/profile_icons/profileIcon${context.summonerState.summoner.profileIconId}.jpg?image=q_auto:best&v=1518361200`}
+                alt="Summoner profile icon"
               />
             </Col>
 
