@@ -1,7 +1,7 @@
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Test change
+// Test change 2
 
 builder.Services.AddCors(options =>
 {
