@@ -11,7 +11,7 @@ export default function SummonerSearchForm() {
   const context = useContext(RumbGGContext);
   const { fetchingSummonerData, setFetchingSummonerData } = context.fetchingSummonerDataState;
 
-  const [summonerName, setSummonerName] = useState("Rumb");
+  const [summonerName, setSummonerName] = useState("Bold Critter");
   const [region, setRegion] = useState(2);
 
   const handleSubmit = (event) => {
