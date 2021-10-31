@@ -9,11 +9,6 @@ import { Constants } from "../../Utilities/Constants";
 
 export default function SummonerSearchForm() {
   const context = useContext(RumbGGContext);
-  const { summoner, setSummoner } = context.summonerState;
-  const { summonerRankedSolo5x5LeagueEntry, setSummonerRankedSolo5x5LeagueEntry, } = context.summonerRankedSolo5x5LeagueEntryState;
-  const { winRateDTOsPast7Days, setWinRateDTOsPast7Days } = context.winRateDTOsPast7DaysState;
-  const { threeMainChampions, setThreeMainChampions } = context.threeMainChampionsState;
-  const { matchHistoryCardDTOsLast3RankedGames, setMatchHistoryCardDTOsLast3RankedGames } = context.matchHistoryCardDTOsLast3RankedGamesState;
   const { fetchingSummonerData, setFetchingSummonerData } = context.fetchingSummonerDataState;
 
   const [summonerName, setSummonerName] = useState("Rumb");
@@ -31,7 +26,7 @@ export default function SummonerSearchForm() {
     fetch(url).then((response) => {
       if (response.ok) {
         response.json().then((summonerFromServer) => {
-          setSummoner(summonerFromServer);
+          context.summonerState.setSummoner(summonerFromServer);
           getWinrateDTOsPast7Days(summonerFromServer.puuid, summonerFromServer.region);
           getRankedSolo5x5leagueEntry(summonerFromServer.id, summonerFromServer.region);
           getThreeMainChampions(summonerFromServer.id, summonerFromServer.region);
@@ -60,7 +55,7 @@ export default function SummonerSearchForm() {
     fetch(url).then((response) => {
       if (response.ok) {
         response.json().then((rankedSolo5x5leagueEntry) => {
-          setSummonerRankedSolo5x5LeagueEntry(rankedSolo5x5leagueEntry);
+          context.summonerRankedSolo5x5LeagueEntryState.setSummonerRankedSolo5x5LeagueEntry(rankedSolo5x5leagueEntry);
           setFetchingSummonerData(false);
         });
       } else {
@@ -86,7 +81,7 @@ export default function SummonerSearchForm() {
     fetch(url).then((response) => {
       if (response.ok) {
         response.json().then((winrateDTOsPast7DaysFromServer) => {
-          setWinRateDTOsPast7Days(winrateDTOsPast7DaysFromServer);
+          context.winRateDTOsPast7DaysState.setWinRateDTOsPast7Days(winrateDTOsPast7DaysFromServer);
         });
       } else {
         response
@@ -109,7 +104,7 @@ export default function SummonerSearchForm() {
     fetch(url).then((response) => {
       if (response.ok) {
         response.json().then((threeMainChampionsFromServer) => {
-          setThreeMainChampions(threeMainChampionsFromServer);
+          context.threeMainChampionsState.setThreeMainChampions(threeMainChampionsFromServer);
         });
       } else {
         response
@@ -132,7 +127,7 @@ export default function SummonerSearchForm() {
     fetch(url).then((response) => {
       if (response.ok) {
         response.json().then((matchHistoryCardDTOsLast3RankedGamesFromServer) => {
-          setMatchHistoryCardDTOsLast3RankedGames(matchHistoryCardDTOsLast3RankedGamesFromServer);
+          context.matchHistoryCardDTOsLast3RankedGamesState.setMatchHistoryCardDTOsLast3RankedGames(matchHistoryCardDTOsLast3RankedGamesFromServer);
         });
       } else {
         response

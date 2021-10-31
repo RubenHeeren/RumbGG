@@ -155,6 +155,7 @@ fiveDaysAgo.setDate(today.getDate() - 5);
 let sixDaysAgo = new Date();
 sixDaysAgo.setDate(today.getDate() - 6);
 
+// eslint-disable-next-line no-extend-native
 Date.prototype.formatMMDDYY = function () {
   let shortenedDateString =
     this.getDate() +

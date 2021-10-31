@@ -30,6 +30,7 @@ export default function GameAccordion(props) {
                     <img
                       src={`${Constants.STATIC_FILE_URL_CHAMPION_TILES}/${game.championName}_0.jpg`}
                       className="w-100 rounded-circle border border-secondary shadow"
+                      alt="champion image"
                     />
                   </Col>
                   <Col xs={6}>
@@ -38,12 +39,14 @@ export default function GameAccordion(props) {
                         <img
                           src={`${Constants.STATIC_FILE_URL_SUMMONER_SPELLS}/${game.summoner1Id}.png`}
                           className="w-100 border border-secondary shadow-sm"
+                          alt="summoner spell 1"
                         />
                       </Col>
                       <Col xs={6} className="g-0 p-2">
                         <img
                           src={`${Constants.STATIC_FILE_URL_STYLES}/${game.style1Id}.png`}
                           className="w-100"
+                          alt="rune primary"
                         />
                       </Col>
                     </Row>
@@ -52,12 +55,14 @@ export default function GameAccordion(props) {
                         <img
                           src={`${Constants.STATIC_FILE_URL_SUMMONER_SPELLS}/${game.summoner2Id}.png`}
                           className="w-100 border border-secondary shadow-sm"
+                          alt="summoner spell 2"
                         />
                       </Col>
                       <Col xs={6} className="g-0 p-2">
                         <img
                           src={`${Constants.STATIC_FILE_URL_STYLES}/${game.style2Id}.png`}
                           className="ms-1 w-75"
+                          alt="rune secondary"
                         />
                       </Col>
                     </Row>
@@ -82,12 +87,14 @@ export default function GameAccordion(props) {
                         <img
                           src={`${Constants.STATIC_FILE_URL_ITEMS}/${getWinOrLoseItemStringFromItemId(game.win, game.item0Id)}.png`}
                           className="w-100 border border-secondary shadow-sm"
+                          alt="Item 1"
                         />
                       </Col>
                       <Col className="g-0 p-1" xs={12}>
                       <img
                           src={`${Constants.STATIC_FILE_URL_ITEMS}/${getWinOrLoseItemStringFromItemId(game.win, game.item3Id)}.png`}
                           className="w-100 border border-secondary shadow-sm"
+                          alt="Item 4"
                         />
                       </Col>
                     </Row>
@@ -98,12 +105,14 @@ export default function GameAccordion(props) {
                       <img
                           src={`${Constants.STATIC_FILE_URL_ITEMS}/${getWinOrLoseItemStringFromItemId(game.win, game.item1Id)}.png`}
                           className="w-100 border border-secondary shadow-sm"
+                          alt="Item 2"
                         />
                       </Col>
                       <Col className="g-0 p-1" xs={12}>
                       <img
                           src={`${Constants.STATIC_FILE_URL_ITEMS}/${getWinOrLoseItemStringFromItemId(game.win, game.item4Id)}.png`}
                           className="w-100 border border-secondary shadow-sm"
+                          alt="Item 5"
                         />
                       </Col>
                     </Row>
@@ -114,12 +123,14 @@ export default function GameAccordion(props) {
                       <img
                           src={`${Constants.STATIC_FILE_URL_ITEMS}/${getWinOrLoseItemStringFromItemId(game.win, game.item2Id)}.png`}
                           className="w-100 border border-secondary shadow-sm"
+                          alt="Item 3"
                         />
                       </Col>
                       <Col className="g-0 p-1" xs={12}>
                       <img
                           src={`${Constants.STATIC_FILE_URL_ITEMS}/${getWinOrLoseItemStringFromItemId(game.win, game.item5Id)}.png`}
                           className="w-100 border border-secondary shadow-sm"
+                          alt="Item 6"
                         />
                       </Col>
                     </Row>
@@ -132,6 +143,7 @@ export default function GameAccordion(props) {
                     <img
                           src={`${Constants.STATIC_FILE_URL_ITEMS}/${getWinOrLoseItemStringFromItemId(game.win, game.trinketId)}.png`}
                           className="w-100 border border-secondary shadow-sm"
+                          alt="Trinket"
                         />
                     </div>                    
                   </Col>
@@ -149,7 +161,7 @@ export default function GameAccordion(props) {
 }
 
 function getWinOrLoseItemStringFromItemId(win, itemId) {
-  if (itemId != 0) {
+  if (itemId !== 0) {
     return itemId.toString();
   }
   

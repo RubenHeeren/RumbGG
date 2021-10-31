@@ -13,7 +13,6 @@ import Button from 'react-bootstrap/Button'
 
 export default function SummonerSummary(props) {
   const context = useContext(RumbGGContext);
-  const [modalShow, setModalShow] = React.useState(props.show);
 
   return (
     <Modal

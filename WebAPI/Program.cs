@@ -8,7 +8,7 @@ builder.Services.AddCors(options =>
                       builder =>
                       {
                           builder.WithOrigins("http://localhost:3000",
-                                              "http://www.publishazurewebsite.com");
+                                              "https://thankful-ocean-0251cc303.azurestaticapps.net");
                       });
 });
 

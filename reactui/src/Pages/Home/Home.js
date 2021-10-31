@@ -8,7 +8,7 @@ import { isObjectNotEmpty } from "../../Utilities/UtilityFunctions";
 
 export default function Home() {
   const context = useContext(RumbGGContext);
-  const [modalShow, setModalShow] = useState(isObjectNotEmpty(context.summonerState.summoner));
+  const [modalShow, setModalShow] = useState(false);
 
   const isFirstRun = useRef(true);
   useEffect(() => {

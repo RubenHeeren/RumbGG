@@ -6,8 +6,8 @@ const endpoints = {
   MATCH_HISTORY_CARD_DTOS_LAST_THREE_RANKED_GAMES: 'match-history-card-dtos-last-3-ranked-games'
 };
 
-const API_BASE_URL_PRODUCTION = "https://myapp.herokuapp.com/riotapi";
-const STATIC_FILES_BASE_URL_PRODUCTION = "https://myapp.herokuapp.com";
+const API_BASE_URL_PRODUCTION = "https://rumbggwebapi.azurewebsites.net/riotapi";
+const STATIC_FILES_BASE_URL_PRODUCTION = "https://rumbggwebapi.azurewebsites.net";
 
 const API_BASE_URL_DEVELOPMENT = "https://localhost:7124/riotapi";
 const STATIC_FILES_BASE_URL_DEVELOPMENT = "https://localhost:7124";
