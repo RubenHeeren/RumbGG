@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'WebAPI/**'
+      - '.github/workflows/RumbGGWebAPI.yml'
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
