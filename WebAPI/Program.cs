@@ -22,7 +22,11 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(swaggerUIOptions =>
+{
+    swaggerUIOptions.SwaggerEndpoint("/swagger/v1/swagger.json", "Web API serving Riot Games API data");
+    swaggerUIOptions.RoutePrefix = "";
+});
 
 app.UseHttpsRedirection();
 
