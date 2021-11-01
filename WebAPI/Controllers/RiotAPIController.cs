@@ -25,7 +25,7 @@ namespace ReactUI.Controllers
 
         public RiotAPIController()
         {
-            api = RiotApi.GetDevelopmentInstance("RGAPI-6d4c03e5-883e-46fb-aec8-65af41b15d61");
+            api = RiotApi.GetDevelopmentInstance("RGAPI-2d4d8dce-8b41-4db6-994e-d3a916cc8347");
         }
 
         [HttpGet]
