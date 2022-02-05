@@ -45,7 +45,12 @@
       "ProjectGuid": "df33fbef-a0ff-48fc-b535-e3dce1cd110e",
       "DisplayName": "RiotSharp",
       "ColorIndex": 7
+    },
+    "a88e5766-63c2-488a-9976-84e84b5799cd": {
+      "ProjectGuid": "a88e5766-63c2-488a-9976-84e84b5799cd",
+      "DisplayName": "Client",
+      "ColorIndex": 8
     }
   },
-  "NextColorIndex": 8
+  "NextColorIndex": 9
 }

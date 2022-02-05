@@ -1,8 +1,9 @@
-namespace WebAPI.Models
+using RiotSharp.Misc;
+
+namespace WebAPI.Models;
+
+public class GetSummonerQueryParameters
 {
-    public class GetSummonerQueryParameters
-    {
-        public string name { get; set; }
-        public string region { get; set; }
-    }
+    public string? Name { get; set; }
+    public Region Region { get; set; }
 }
