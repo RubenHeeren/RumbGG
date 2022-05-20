@@ -1,16 +1,15 @@
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Test change 2
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: "CORSPolicy",
-                      builder =>
-                      {
-                          builder.WithOrigins("http://localhost:3000",
-                                              "https://thankful-ocean-0251cc303.azurestaticapps.net");
-                      });
+        builder =>
+        {
+            builder.WithOrigins("https://localhost:7046",
+                "https://thankful-ocean-0251cc303.azurestaticapps.net");
+        });
 });
 
 builder.Services.AddControllers();

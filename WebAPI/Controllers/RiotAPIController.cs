@@ -5,31 +5,31 @@ using RiotSharp.Endpoints.MatchEndpoint;
 using RiotSharp.Endpoints.SummonerEndpoint;
 using RiotSharp.Misc;
 using System.Globalization;
-using WebAPI.Models;
 using RiotSharp.Endpoints.StaticDataEndpoint.Champion;
 using RiotSharp.Endpoints.ChampionMasteryEndpoint;
 using WebAPI.Utilities;
+using Shared.Models;
 
 namespace ReactUI.Controllers;
 
+// Generate new API key: https://developer.riotgames.com/
 [ApiController]
-[Route("[controller]")]
 public class RiotAPIController : ControllerBase
 {
-    private RiotApi _riotApi;
+    private readonly RiotApi _riotApi;
 
     public RiotAPIController()
     {
-        _riotApi = RiotApi.GetDevelopmentInstance("RGAPI-7a5ba71d-ddb9-4ddd-a8fe-b96536009685");
+        _riotApi = RiotApi.GetDevelopmentInstance("RGAPI-9fb3d34b-c643-46c6-ac39-7fbd4e6af374");
     }
 
     [HttpGet]
-    [Route("summoner")]
-    public async Task<ActionResult<Summoner>> GetSummoner([FromQuery] GetSummonerQueryParameters queryParams)
+    [Route("api/summoner")]
+    public async Task<ActionResult<Summoner>> GetSummoner(string name = "", Region region = Region.Global)
     {
         try
         {
-            var summoner = await _riotApi.Summoner.GetSummonerByNameAsync(queryParams.Region, queryParams.Name);
+            var summoner = await _riotApi.Summoner.GetSummonerByNameAsync(region, name);
 
             if (summoner != null)
             {
