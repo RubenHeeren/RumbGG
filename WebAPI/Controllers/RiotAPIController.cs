@@ -24,6 +24,48 @@ public class RiotAPIController : ControllerBase
     }
 
     [HttpGet]
+    [Route("api/summoner")]
+    public async Task<ActionResult<Summoner>> GetSummoner(string name, Region region)
+    {
+        try
+        {
+            var summoner = await _riotApi.Summoner.GetSummonerByNameAsync(region, name);
+
+            if (summoner != null)
+            {
+                return Ok(summoner);
+            }
+            else
+            {
+                return NotFound();
+            }
+
+        }
+        catch (Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
+
+    [HttpGet]
+    [Route("api/ranked-solo-5x5-league-entry")]
+    public async Task<ActionResult<LeagueEntry>> GetRankedSolo5x5leagueEntry(string encryptedSummonerId, Region region)
+    {
+        try
+        {
+            List<LeagueEntry> leagueEntries = await _riotApi.League.GetLeagueEntriesBySummonerAsync(region, encryptedSummonerId);
+
+            LeagueEntry rankedLeagueEntry = leagueEntries.First(rankedLeagueEntry => rankedLeagueEntry.QueueType == "RANKED_SOLO_5x5");
+
+            return Ok(rankedLeagueEntry);
+        }
+        catch (Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
+
+    [HttpGet]
     [Route("api/3-main-champions")]
     public async Task<ActionResult<Top3PlayedChampionsCardDTO[]>> Get3MainChampions([FromQuery] Get3MainChampionsQueryParameters get3MainChampionsQueryParameters)
     {
