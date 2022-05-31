@@ -20,35 +20,11 @@ public class RiotAPIController : ControllerBase
 
     public RiotAPIController()
     {
-        _riotApi = RiotApi.GetDevelopmentInstance("RGAPI-9fb3d34b-c643-46c6-ac39-7fbd4e6af374");
+        _riotApi = RiotApi.GetDevelopmentInstance("RGAPI-bf667ca1-0bc2-486c-9b0e-8e0e5248d458");
     }
 
     [HttpGet]
-    [Route("api/summoner")]
-    public async Task<ActionResult<Summoner>> GetSummoner(string name = "", Region region = Region.Global)
-    {
-        try
-        {
-            var summoner = await _riotApi.Summoner.GetSummonerByNameAsync(region, name);
-
-            if (summoner != null)
-            {
-                return Ok(summoner);
-            }
-            else
-            {
-                return NotFound();
-            }
-
-        }
-        catch (Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
-    }
-
-    [HttpGet]
-    [Route("3-main-champions")]
+    [Route("api/3-main-champions")]
     public async Task<ActionResult<Top3PlayedChampionsCardDTO[]>> Get3MainChampions([FromQuery] Get3MainChampionsQueryParameters get3MainChampionsQueryParameters)
     {
         Region region = (Region)int.Parse(get3MainChampionsQueryParameters.region);
@@ -72,6 +48,7 @@ public class RiotAPIController : ControllerBase
 
                 string championNamePurified = championName;
                 var charsToRemove = new string[] { "@", ",", ".", ";", "'" };
+
                 foreach (var c in charsToRemove)
                 {
                     championNamePurified = championNamePurified.Replace(c, string.Empty);
@@ -90,29 +67,10 @@ public class RiotAPIController : ControllerBase
             // Handle the exception however you want.
             return NotFound(ex.Message);
         }
-    }
+    }    
 
     [HttpGet]
-    [Route("ranked-solo-5x5-league-entry")]
-    public async Task<ActionResult<LeagueEntry>> GetRankedSolo5x5leagueEntry([FromQuery] GetRankedSolo5x5leagueEntryQueryParameters getRankedSolo5x5leagueEntryQueryParameters)
-    {
-        try
-        {
-            Region region = (Region)int.Parse(getRankedSolo5x5leagueEntryQueryParameters.region);
-            List<LeagueEntry> leagueEntries = await _riotApi.League.GetLeagueEntriesBySummonerAsync(region, getRankedSolo5x5leagueEntryQueryParameters.encryptedSummonerId);
-
-            LeagueEntry rankedLeagueEntry = leagueEntries.First(rankedLeagueEntry => rankedLeagueEntry.QueueType == "RANKED_SOLO_5x5");
-
-            return Ok(rankedLeagueEntry);
-        }
-        catch (Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
-    }
-
-    [HttpGet]
-    [Route("winrate-dtos-past-7-days")]
+    [Route("api/winrate-dtos-past-7-days")]
     public async Task<ActionResult<List<WinrateDTOPast7Days>>> GetWinrateDTOsPast7Days([FromQuery] GetWinrateDTOsPast7DaysQueryParameters getWinrateDTOsPast7DaysQueryParameters)
     {
         Region region = (Region)int.Parse(getWinrateDTOsPast7DaysQueryParameters.region);
@@ -269,7 +227,7 @@ public class RiotAPIController : ControllerBase
     }
 
     [HttpGet]
-    [Route("match-history-card-dtos-last-3-ranked-games")]
+    [Route("api/match-history-card-dtos-last-3-ranked-games")]
     public async Task<ActionResult<MatchHistoryCardDTO[]>> GetMatchHistoryCardDTOsLast3RankedGames([FromQuery] GetMatchHistoryCardDTOsLast3RankedGamesQueryParameters getMatchHistoryCardDTOsLast3RankedGamesQueryParameters)
     {
         Region region = (Region)int.Parse(getMatchHistoryCardDTOsLast3RankedGamesQueryParameters.region);

@@ -1,36 +1,61 @@
 ﻿@page "/"
+@using Client.Components
 @using RiotSharp.Misc
+<PageTitle>Home</PageTitle>
 
-<PageTitle>Search</PageTitle>
+@if (_summoner is not null && _leagueEntry is not null)
+{
+    <BSModal Size="Size.Large" ModalColor="BSColor.Dark" DataId="ModalSummonerSummary">
+        <Header>
+            <div class="summoner-summary-profile-card-container shadow">
+                <img src="@($"//opgg-static.akamaized.net/images/profile_icons/profileIcon{_summoner.ProfileIconId}.jpg?image=q_auto:best&v=1518361200")" alt="Card image cap" />
+                <h6 class="pt-2 ps-2">@_leagueEntry.SummonerName</h6>
+            </div>
+
+            <div class="summoner-summary-rank-card-container d-flex flex-column align-items-center ms-4">
+                <img src="@($"https://opgg-static.akamaized.net/images/medals_new/{@_leagueEntry.Tier}.png?image=q_auto,f_webp,w_144&v=1653902315586")" alt="Card image cap" />
+                <div class="">
+                    <p class="m-0">Ranked Solo</p>
+                    <p class="mt-1 mb-0">@_leagueEntry.Tier.ToLowerInvariant().FirstCharToUpper() @_leagueEntry.Rank @_leagueEntry.LeaguePoints LP</p>
+                    <p class="mt-1">@(_leagueEntry.Wins)W / @(_leagueEntry.Losses)L</p>
+                </div>
+            </div>
+        </Header>
+        <Content>
+            { Match history }
+        </Content>
+        <Footer Context="modal">
+            <BSButton MarginStart="Margins.Auto" Color="BSColor.Secondary" @onclick="modal.HideAsync">Close</BSButton>
+            <BSButton Color="BSColor.Primary">Save changes</BSButton>
+        </Footer>
+    </BSModal>
+    <BSButton Color="BSColor.Primary" Target="ModalSummonerSummary">Launch demo modal</BSButton>
+}
 
 <div class="d-flex justify-content-center align-items-center min-vh-88">
-    <div class="w-100">
-        <form @onsubmit="HandleSubmitAsync" class="row w-100" OnValidSubmit="HandleValidSubmitAsync">
-            <div class="col-8">
-                <input class="form-control me-2" type="search" placeholder="Your summoner name" aria-label="Search" @bind-value="_querySummonerName" />
-            </div>
+    <form @onsubmit="HandleSubmitAsync" class="row w-100" OnValidSubmit="HandleValidSubmitAsync">
+        <div class="col-8">
+            <input class="form-control me-2" type="search" placeholder="Summoner name" aria-label="Search" @bind-value="_querySummonerName" />
+        </div>
 
-            <div class="col-2">
-                <select class="form-select" aria-label="Default select example" @onchange="OnChangeSummonerRegion">
-
-                    <option selected>Region</option>
-
-                    @foreach (var region in (Region[])Enum.GetValues(typeof(Region)))
+        <div class="col-2">
+            <select class="form-select" aria-label="Default select example" @onchange="OnChangeSummonerRegion">
+                @foreach (var region in (Region[])Enum.GetValues(typeof(Region)))
+                {
+                    @if (region == Region.Euw)
                     {
-                        <option value="@((int)region)">@region.ToString()</option>
+                        <option selected value="@((int)region)">@region.ToString().ToUpperInvariant()</option>
                     }
-                </select>
-            </div>
+                    else
+                    {
+                        <option value="@((int)region)">@region.ToString().ToUpperInvariant()</option>
+                    }
+                }
+            </select>
+        </div>
 
-            <div class="col-1">
-                <button class="btn btn-light" type="submit">Search</button>
-            </div>
-        </form>
-
-        @if (_summoner is not null)
-        {
-            <h1 class="mt-5">Found summoner @_summoner.Name</h1>
-            <p>Level: @_summoner.Level</p>
-        }
-    </div>
+        <div class="col-1">
+            <button class="btn btn-light" type="submit">Search</button>
+        </div>
+    </form>
 </div>

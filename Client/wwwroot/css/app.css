@@ -30,8 +30,14 @@ a, .btn-link {
     border-color: #1861ac;
 }
 
-.content {
-    padding-top: 1.1rem;
+.summoner-summary-profile-card-container img {
+    max-width: 128px;
+    max-height: 128px;
+}
+
+.summoner-summary-rank-card-container img {    
+    max-width: 85px;
+    max-height: 85px;
 }
 
 .valid.modified:not([type=checkbox]) {
@@ -40,6 +46,10 @@ a, .btn-link {
 
 .invalid {
     outline: 1px solid red;
+}
+
+.modal-header {
+    align-items: start;
 }
 
 .validation-message {

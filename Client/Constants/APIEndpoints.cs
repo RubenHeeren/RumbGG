@@ -11,4 +11,6 @@ internal static class APIEndpoints
 #endif
 
     internal static string Summoner(string name, Region region) => $"{ServerBaseUrl}/api/summoner/?name={name}&region={(int)region}";
+
+    internal static string RankedSolo5x5LeagueEntry(string encryptedSummonerId, Region region) => $"{ServerBaseUrl}/api/ranked-solo-5x5-league-entry/?encryptedSummonerId={encryptedSummonerId}&region={(int)region}";
 }

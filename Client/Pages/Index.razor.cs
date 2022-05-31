@@ -1,6 +1,8 @@
 ﻿using Client.Constants;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
+using RiotSharp;
+using RiotSharp.Endpoints.LeagueEndpoint;
 using RiotSharp.Endpoints.SummonerEndpoint;
 using RiotSharp.Misc;
 using Shared.Models;
@@ -15,10 +17,19 @@ public partial class Index
     [Inject]
     HttpClient HttpClient { get; set; } = default!;
 
-    private Summoner? _summoner;
+    private RiotApi? _riotApi;
 
-    private string _querySummonerName = string.Empty;
+    private Summoner? _summoner;
+    private LeagueEntry? _leagueEntry;
+
+    private string _querySummonerName = "Rumb2";
     private Region _querySummonerRegion = Region.Euw;
+
+    protected override void OnInitialized()
+    {
+        // Generate new API key: https://developer.riotgames.com/
+        _riotApi = RiotApi.GetDevelopmentInstance("RGAPI-bf667ca1-0bc2-486c-9b0e-8e0e5248d458");
+    }
 
     private void OnChangeSummonerRegion(ChangeEventArgs e)
     {
@@ -31,15 +42,31 @@ public partial class Index
 
     private async Task HandleSubmitAsync()
     {
-        _summoner = await HttpClient.GetFromJsonAsync<Summoner>(APIEndpoints.Summoner(_querySummonerName, _querySummonerRegion));
-
-        if (_summoner != null)
+        try
         {
-            Console.WriteLine($"Got summoner \"{_summoner.Name}\".");
+            _summoner = await _riotApi.Summoner.GetSummonerByNameAsync(_querySummonerRegion, _querySummonerName);
         }
-        else
+        catch (Exception ex)
         {
-            Console.WriteLine("Failed to get summoner.");
+            Console.WriteLine($"Failed to get summoner with name \"{_querySummonerName}\". Exception: {ex.Message}");
+        }        
+
+        if (_summoner is not null)
+        {
+            Console.WriteLine($"Got summoner \"{_summoner.Name}\". Getting League entry...");
+
+            try
+            {
+                List<LeagueEntry> leagueEntries = await _riotApi.League.GetLeagueEntriesBySummonerAsync(_querySummonerRegion, _summoner.Id);
+
+                _leagueEntry = leagueEntries.First(rankedLeagueEntry => rankedLeagueEntry.QueueType == "RANKED_SOLO_5x5");
+
+                Console.WriteLine($"Got league entry for summoner \"{_leagueEntry.SummonerName}\". Showing modal...");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to get league entry for summoner \"{_leagueEntry.SummonerName}\". Exception: {ex.Message}");
+            }
         }
     }
 }

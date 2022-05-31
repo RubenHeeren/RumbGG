@@ -55,10 +55,12 @@ namespace RiotSharp.Http
         protected async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request)
         {
             var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+            
             if (!response.IsSuccessStatusCode)
             {
                 HandleRequestFailure(response); //Pass Response to get status code, Then Dispose Object.
             }
+
             return response;
         }
 
@@ -71,10 +73,12 @@ namespace RiotSharp.Http
                 $"{scheme}://{host}{relativeUrl}?{BuildArgumentsString(queryParameters)}";
 
             var requestMessage = new HttpRequestMessage(httpMethod, url);
+
             if (!string.IsNullOrEmpty(ApiKey))
             {
-                requestMessage.Headers.Add("X-Riot-Token", ApiKey);
-            }
+                requestMessage.Headers.Add("X-Riot-Token", ApiKey);                
+            }            
+
             return requestMessage;
         }
 
