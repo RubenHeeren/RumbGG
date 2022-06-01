@@ -1,0 +1,9 @@
+﻿<BSCard CardType="CardType.Card" Color="BSColor.Dark" Class="shadow">
+    <BSCard CardType="CardType.Image" src="@($"{APIEndpoints.ServerBaseUrl}/{Top3MainChampionsCardEntry.RelativeImagePath}")" alt="Card image cap" />
+    <BSCard CardType="CardType.Body">
+        <BSCard CardType="CardType.Title">@Top3MainChampionsCardEntry.Name</BSCard>
+        <BSCard CardType="CardType.Text">
+            @String.Format("{0:n0}", Top3MainChampionsCardEntry.MasteryPoints) Mastery Points            
+        </BSCard>        
+    </BSCard>
+</BSCard>

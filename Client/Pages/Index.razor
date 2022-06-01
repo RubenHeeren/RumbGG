@@ -3,10 +3,10 @@
 @using RiotSharp.Misc
 <PageTitle>Home</PageTitle>
 
-@if (_summoner is not null && _leagueEntry is not null)
-{
-    <BSModal Size="Size.Large" ModalColor="BSColor.Dark" DataId="ModalSummonerSummary">
-        <Header>
+<BSModal @ref="_modalSummonerSummary" Size="Size.ExtraLarge" DataId="ModalSummonerSummary" ModalColor="BSColor.Dark">
+    <Header>
+        @if (_summoner is not null && _leagueEntry is not null)
+        {
             <div class="summoner-summary-profile-card-container shadow">
                 <img src="@($"//opgg-static.akamaized.net/images/profile_icons/profileIcon{_summoner.ProfileIconId}.jpg?image=q_auto:best&v=1518361200")" alt="Card image cap" />
                 <h6 class="pt-2 ps-2">@_leagueEntry.SummonerName</h6>
@@ -20,17 +20,68 @@
                     <p class="mt-1">@(_leagueEntry.Wins)W / @(_leagueEntry.Losses)L</p>
                 </div>
             </div>
-        </Header>
-        <Content>
-            { Match history }
-        </Content>
-        <Footer Context="modal">
-            <BSButton MarginStart="Margins.Auto" Color="BSColor.Secondary" @onclick="modal.HideAsync">Close</BSButton>
-            <BSButton Color="BSColor.Primary">Save changes</BSButton>
-        </Footer>
-    </BSModal>
-    <BSButton Color="BSColor.Primary" Target="ModalSummonerSummary">Launch demo modal</BSButton>
-}
+        }
+        else
+        {
+            <BSSpinner Color="BSColor.Secondary" />
+        }
+    </Header>
+    <Content>
+        <BSContainer Class="pt-3">
+            @if (_top3MainChampionsCards is not null)
+            {
+                <BSRow>
+                    <h1 class="mb-3">Most Played Champions</h1>
+
+                    <BSCol>
+                        <Top3MainChampionsCard Top3MainChampionsCardEntry="_top3MainChampionsCards[0]" />
+                    </BSCol>
+
+                    <BSCol>
+                        <Top3MainChampionsCard Top3MainChampionsCardEntry="_top3MainChampionsCards[1]" />
+                    </BSCol>
+
+                    <BSCol>
+                        <Top3MainChampionsCard Top3MainChampionsCardEntry="_top3MainChampionsCards[2]" />
+                    </BSCol>
+                </BSRow>
+            }
+            else
+            {
+                <BSSpinner Color="BSColor.Secondary" />
+            }
+
+            <div class="mt-5">
+                <h1 class="mb-3">Match History</h1>
+
+                @if (_matchHistoryAccordions is not null)
+                {
+                    @foreach (var matchHistoryAccordion in _matchHistoryAccordions)
+                    {                        
+                        <h5>Date and duration: @matchHistoryAccordion.MatchStartingDate - @matchHistoryAccordion.DurationInMinutes minutes</h5>
+                        <h6>Match type: @matchHistoryAccordion.MatchType</h6>
+                        <p>
+                            @(matchHistoryAccordion.Won ? "Victory" : "Defeat")
+                            <br>
+                            Champion: @matchHistoryAccordion.ChampionName
+                            <br>
+                            KDA: @(matchHistoryAccordion.Kills)/@(matchHistoryAccordion.Deaths)/@(matchHistoryAccordion.Assists)
+                        </p>
+                        <hr />
+                    }
+                }
+                else
+                {
+                    <BSSpinner Color="BSColor.Secondary" />
+                }
+            </div>
+
+        </BSContainer>
+    </Content>
+    <Footer Context="modal">
+        <BSButton MarginStart="Margins.Auto" Color="BSColor.Light" @onclick="modal.HideAsync">Close</BSButton>
+    </Footer>
+</BSModal>
 
 <div class="d-flex justify-content-center align-items-center min-vh-88">
     <form @onsubmit="HandleSubmitAsync" class="row w-100" OnValidSubmit="HandleValidSubmitAsync">
@@ -55,7 +106,7 @@
         </div>
 
         <div class="col-1">
-            <button class="btn btn-light" type="submit">Search</button>
+            <BSButton Color="BSColor.Light" IsSubmit="true">Search</BSButton>
         </div>
     </form>
 </div>

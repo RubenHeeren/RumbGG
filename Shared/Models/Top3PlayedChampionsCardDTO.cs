@@ -1,8 +1,10 @@
 ﻿namespace Shared.Models;
 
-public class Top3PlayedChampionsCardDTO
+public class Top3MainChampionsCardDTO
 {
-    public string? name { get; set; }
-    public int masteryPoints { get; set; }
-    public string relativeImagePath { get; set; }
+    public string Name { get; set; } = default!;
+
+    public int MasteryPoints { get; set; }
+
+    public string RelativeImagePath { get; set; } = default!;
 }

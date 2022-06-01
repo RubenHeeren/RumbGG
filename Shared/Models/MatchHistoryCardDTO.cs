@@ -1,28 +1,28 @@
 ﻿namespace Shared.Models;
 
-public class MatchHistoryCardDTO
+public class MatchHistoryAccordionDTO
 {
-    public string? matchType { get; set; }
-    public string? matchStartingDate { get; set; }
-    public int? durationInMinutes { get; set; }
-    public bool? won { get; set; }
-    public string? championName { get; set; }
-    public int? summoner1Id { get; set; }
-    public int? summoner2Id { get; set; }
-    public int? style1Id { get; set; }
-    public int? style2Id { get; set; }
-    public int? kills { get; set; }
-    public int? deaths { get; set; }
-    public int? assists { get; set; }        
-    public string? killParticipation { get; set; }
-    public int? level { get; set; }
-    public int? creepScore { get; set; }
-    public int? gold { get; set; }
-    public int? item0Id { get; set; }
-    public int? item1Id { get; set; }
-    public int? item2Id { get; set; }
-    public int? item3Id { get; set; }
-    public int? item4Id { get; set; }
-    public int? item5Id { get; set; }
-    public int? trinketId { get; set; }
+    public string MatchType { get; set; } = default!;
+    public string MatchStartingDate { get; set; } = default!;
+    public int DurationInMinutes { get; set; }
+    public bool Won { get; set; }
+    public string ChampionName { get; set; } = default!;
+    public int Summoner1Id { get; set; }
+    public int Summoner2Id { get; set; }
+    public int RunesStyle1Id { get; set; }
+    public int RunesStyle2Id { get; set; }
+    public int Kills { get; set; }
+    public int Deaths { get; set; }
+    public int Assists { get; set; }        
+    public string KillParticipation { get; set; } = default!;
+    public int Level { get; set; }
+    public int CreepScore { get; set; }
+    public int Gold { get; set; }
+    public int Item0Id { get; set; }
+    public int Item1Id { get; set; }
+    public int Item2Id { get; set; }
+    public int Item3Id { get; set; }
+    public int Item4Id { get; set; }
+    public int Item5Id { get; set; }
+    public int TrinketId { get; set; }
 }

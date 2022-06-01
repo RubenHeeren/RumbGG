@@ -1,24 +1,26 @@
-﻿using Client.Constants;
+﻿using BlazorStrap;
+using Client.Constants;
 using Microsoft.AspNetCore.Components;
-using Newtonsoft.Json;
-using RiotSharp;
 using RiotSharp.Endpoints.LeagueEndpoint;
 using RiotSharp.Endpoints.SummonerEndpoint;
 using RiotSharp.Misc;
-using Shared.Models;
 using System.Net.Http.Json;
-using System.Net.Mime;
-using System.Text;
 
 namespace Client.Pages;
 
 public partial class Index
 {
+    // Blazor makes sure this is not null.
     [Inject]
     HttpClient HttpClient { get; set; } = default!;
 
+    // Blazor makes sure this is not null.
+    private BSModal _modalSummonerSummary = default!;
+
     private Summoner? _summoner;
     private LeagueEntry? _leagueEntry;
+    private Top3MainChampionsCardDTO[]? _top3MainChampionsCards;
+    private MatchHistoryAccordionDTO[]? _matchHistoryAccordions;
 
     private string _querySummonerName = "Rumb2";
     private Region _querySummonerRegion = Region.Euw;
@@ -34,22 +36,32 @@ public partial class Index
 
     private async Task HandleSubmitAsync()
     {
-        _summoner = await HttpClient.GetFromJsonAsync<Summoner>(APIEndpoints.Summoner(_querySummonerName, _querySummonerRegion));
+        await _modalSummonerSummary.ShowAsync();
 
-        if (_summoner is not null)
+        try
         {
-            Console.WriteLine($"Got summoner \"{_summoner.Name}\". Getting League entry...");
+            _summoner = await HttpClient.GetFromJsonAsync<Summoner>(APIEndpoints.Summoner(_querySummonerName, _querySummonerRegion));
 
-            try
+            await InvokeAsync(StateHasChanged);
+
+            if (_summoner is not null)
             {
+                Console.WriteLine($"Got summoner \"{_summoner.Name}\". Getting League entry...");
+
                 _leagueEntry = await HttpClient.GetFromJsonAsync<LeagueEntry>(APIEndpoints.RankedSolo5x5LeagueEntry(_summoner.Id, _querySummonerRegion));
 
-                Console.WriteLine($"Got league entry for summoner \"{_leagueEntry.SummonerName}\". Showing modal...");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to get league entry for summoner \"{_leagueEntry.SummonerName}\". Exception: {ex.Message}");
+                await InvokeAsync(StateHasChanged);
+
+                _top3MainChampionsCards = await HttpClient.GetFromJsonAsync<Top3MainChampionsCardDTO[]>(APIEndpoints.ThreeMainChampions(_summoner.Id, _querySummonerRegion));
+
+                await InvokeAsync(StateHasChanged);
+
+                _matchHistoryAccordions = await HttpClient.GetFromJsonAsync<MatchHistoryAccordionDTO[]>(APIEndpoints.MatchHistoryLast20RankedSolo5x5Games(_summoner.Puuid, _querySummonerRegion));
             }
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Caught exception: \"{ex.Message}\".\nStack trace:\n{ex.StackTrace}");            
+        }        
     }
 }
